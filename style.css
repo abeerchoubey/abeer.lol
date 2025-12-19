@@ -213,10 +213,18 @@ section { padding: 100px 0; }
     text-align: left;
     background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
     padding: 30px;
+    gap: 35px;
     border-left: 3px solid var(--neon);
     border-radius: 0 10px 10px 0;
 }
-
+.resume {
+    text-align: center;
+    background: liner-gradient(145deg, #0f0f0f, #0a0a0a);
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    transition: transform 0.3s, border-color 0.3s;
+}
 .skill-header {
     display: flex;
     align-items: center;
