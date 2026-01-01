@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rapid Cab | Premium Service in Raipur</title>
+    <meta name="description" content="Rapid Cab offers premium taxi and cab services in Raipur. Sedans, SUVs, and traveller buses for local and outstation trips. Call 9617037773.">
+
+    <meta name="keywords" content="cab service in raipur, taxi service raipur, rapid cab raipur, raipur cab booking, outstation taxi raipur">
+
+    <meta name="author" content="Rapid Cab">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6281826595535721"
+     crossorigin="anonymous"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyan: {
+                400: '#22d3ee',
+                500: '#06b6d4',
+                950: '#083344',
+              },
+              slate: {
+                850: '#151f32',
+                900: '#0f172a',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            boxShadow: {
+              'neon': '0 0 10px #22d3ee, 0 0 20px #22d3ee',
+              'neon-strong': '0 0 15px #22d3ee, 0 0 40px #22d3ee',
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+      /* Base Styles */
+      body {
+        background-color: #0f172a;
+        color: #f1f5f9;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+        cursor: none; /* Hide default cursor */
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #22d3ee; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #06b6d4; 
+      }
+
+      /* Animation Utility Classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Cursor Styles */
+      .cursor-dot,
+      .cursor-trail {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      .cursor-dot {
+        width: 12px;
+        height: 12px;
+        background-color: #22d3ee;
+        box-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+      }
+      .cursor-trail {
+        width: 32px;
+        height: 32px;
+        border: 1px solid #22d3ee;
+        opacity: 0.5;
+        transition: width 0.2s, height 0.2s;
+      }
+      
+      /* Mobile override for cursor */
+      @media (hover: none) and (pointer: coarse) {
+        .cursor-dot, .cursor-trail { display: none; }
+        body { cursor: auto; }
+      }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TaxiService",
+      "name": "Rapid Cab",
+      "image": "https://yourdomain.com/logo.png",
+      "telephone": "+91-9617037773",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Raipur",
+        "addressRegion": "Chhattisgarh",
+        "addressCountry": "IN"
+      },
+      "areaServed": "Raipur",
+      "priceRange": "₹₹",
+      "url": "https://yourdomain.com"
+    }
+    </script>
+
+  </head>
+  <body>
+
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-trail" id="cursor-trail"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 transition-all duration-300" id="navbar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <a href="#home" class="flex items-center gap-2 cursor-pointer group">
+            <i data-lucide="car-front" class="h-8 w-8 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] transition-transform group-hover:scale-110"></i>
+            <span class="text-2xl font-bold tracking-tighter text-white">
+              RAPID<span class="text-cyan-400">CAB</span>
+            </span>
+          </a>
+          
+          <!-- Desktop Menu -->
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a href="#home" class="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:shadow-neon">Home</a>
+              <a href="#fleet" class="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:shadow-neon">Fleet</a>
+              <a href="#pricing" class="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:shadow-neon">Pricing</a>
+              <a href="#contact" class="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:shadow-neon">Contact</a>
+              <a href="tel:9617037773" class="bg-cyan-400 text-slate-900 px-4 py-2 rounded-full font-bold hover:bg-cyan-300 hover:shadow-neon transition-all duration-300 transform hover:scale-105">
+                Call Now
+              </a>
+            </div>
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="-mr-2 flex md:hidden">
+            <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-cyan-400 hover:bg-slate-800 focus:outline-none">
+              <i data-lucide="menu" class="h-6 w-6"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu panel -->
+      <div class="hidden md:hidden bg-slate-900 border-b border-slate-800" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a href="#home" class="mobile-link text-slate-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+          <a href="#fleet" class="mobile-link text-slate-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">Fleet</a>
+          <a href="#pricing" class="mobile-link text-slate-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
+          <a href="#contact" class="mobile-link text-slate-300 hover:text-cyan-400 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+          <a href="tel:9617037773" class="text-slate-900 bg-cyan-400 block px-3 py-2 rounded-md text-base font-bold w-full text-center mt-4">
+            Call 9617037773
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      
+      <!-- Hero Section -->
+      <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background -->
+        <div class="absolute inset-0 z-0">
+          <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920" alt="Night City Road" class="w-full h-full object-cover opacity-30">
+          <div class="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/80 to-slate-900"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto reveal">
+          <h2 class="text-cyan-400 font-semibold tracking-wider text-sm md:text-base uppercase mb-4 animate-pulse">
+            Welcome to Raipur's Finest
+          </h2>
+          <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+            Ride in <span class="text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">Comfort.</span><br />
+            Arrive in <span class="text-white">Style.</span>
+          </h1>
+          <p class="text-slate-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+            Premium cab and rental services offering Sedans, SUVs, and Traveller buses. 
+            Experience the smoothest journey Pan-India.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="https://wa.me/919617037773?text=I%20came%20from%20the%20website,%20I%20need%20help." target="_blank" class="px-8 py-4 bg-transparent border-2 border-cyan-400 text-cyan-400 font-bold rounded-full hover:bg-cyan-400 hover:text-slate-900 transition-all duration-300 hover:shadow-neon w-full sm:w-auto">
+              Book via WhatsApp
+            </a>
+            <a href="tel:9617037773" class="px-8 py-4 bg-cyan-400 text-slate-900 font-bold rounded-full hover:bg-cyan-300 transition-all duration-300 shadow-neon flex items-center justify-center gap-2 w-full sm:w-auto hover:scale-105">
+              <i data-lucide="phone-call" class="w-5 h-5"></i>
+              Call 9617037773
+            </a>
+          </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div class="w-6 h-10 border-2 border-slate-500 rounded-full flex justify-center p-1">
+            <div class="w-1 h-2 bg-cyan-400 rounded-full"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fleet Section -->
+      <section id="fleet" class="py-24 bg-slate-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Our Premium <span class="text-cyan-400">Fleet</span></h2>
+            <div class="w-24 h-1 bg-cyan-400 mx-auto rounded-full shadow-neon"></div>
+            <p class="mt-4 text-slate-400 max-w-2xl mx-auto">
+              Choose the perfect vehicle for your journey. Clean, maintained, and driven by professionals.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sedan -->
+            <div class="group bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 hover:border-cyan-400 transition-all duration-300 hover:shadow-neon reveal" style="transition-delay: 100ms;">
+              <div class="h-48 overflow-hidden relative">
+                <div class="absolute inset-0 bg-cyan-400/10 group-hover:bg-transparent transition-colors z-10"></div>
+                <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800" alt="Sedan" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+              </div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-slate-900 rounded-lg text-cyan-400 group-hover:text-white group-hover:bg-cyan-400 transition-colors">
+                    <i data-lucide="car" class="w-6 h-6"></i>
+                  </div>
+                  <h3 class="text-xl font-bold text-white">Premium Sedan</h3>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Perfect for small families or business trips. Comfortable, air-conditioned, and smooth.
+                </p>
+              </div>
+            </div>
+
+            <!-- SUV -->
+            <div class="group bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 hover:border-cyan-400 transition-all duration-300 hover:shadow-neon reveal" style="transition-delay: 200ms;">
+              <div class="h-48 overflow-hidden relative">
+                <div class="absolute inset-0 bg-cyan-400/10 group-hover:bg-transparent transition-colors z-10"></div>
+                <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=800" alt="SUV" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+              </div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-slate-900 rounded-lg text-cyan-400 group-hover:text-white group-hover:bg-cyan-400 transition-colors">
+                    <i data-lucide="car" class="w-6 h-6"></i>
+                  </div>
+                  <h3 class="text-xl font-bold text-white">Luxury SUV</h3>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Extra space and power. Ideal for difficult terrain or more luggage capacity.
+                </p>
+              </div>
+            </div>
+
+            <!-- Bus -->
+            <div class="group bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 hover:border-cyan-400 transition-all duration-300 hover:shadow-neon reveal" style="transition-delay: 300ms;">
+              <div class="h-48 overflow-hidden relative">
+                <div class="absolute inset-0 bg-cyan-400/10 group-hover:bg-transparent transition-colors z-10"></div>
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800" alt="Traveller" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+              </div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="p-2 bg-slate-900 rounded-lg text-cyan-400 group-hover:text-white group-hover:bg-cyan-400 transition-colors">
+                    <i data-lucide="bus" class="w-6 h-6"></i>
+                  </div>
+                  <h3 class="text-xl font-bold text-white">Traveller Bus</h3>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  The best choice for large groups, wedding parties, or tours. Spacious and enjoyable.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing Section -->
+      <section id="pricing" class="py-24 bg-slate-850 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-400/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-float"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-float" style="animation-delay: 1s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          
+          <!-- Section Header -->
+          <div class="text-center mb-12 reveal">
+            <div class="inline-block bg-cyan-400/10 border border-cyan-400 rounded-full px-6 py-2 mb-6 animate-pulse">
+              <span class="text-cyan-400 font-bold tracking-wide text-sm">🔥 10% DISCOUNT ON EVERY RIDE</span>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+              Transparent <span class="text-cyan-400">Pricing</span>
+            </h2>
+            <p class="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed">
+              Whether you need a cab for local chores in Raipur or a long outstation journey, we have the perfect plan for you.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            
+            <!-- Card 1: Local Rental -->
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-8 md:p-10 text-center relative hover:shadow-neon transition-shadow duration-300 flex flex-col justify-between reveal">
+              <div>
+                <div class="text-slate-400 font-medium tracking-widest uppercase mb-4 text-sm">Local Rental (Raipur)</div>
+                <h3 class="text-2xl font-bold text-white mb-2">Full Day Package</h3>
+                <div class="flex items-end justify-center gap-2 mb-4">
+                  <span class="text-5xl font-bold text-white">₹2400</span>
+                </div>
+                <p class="text-cyan-400 font-semibold mb-6">8 Hours / 80 Kilometers</p>
+                
+                <div class="h-px w-full bg-slate-800 my-6"></div>
+                
+                <ul class="text-slate-300 space-y-3 text-left mx-auto max-w-xs mb-8">
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> 10% Off Applied at Checkout
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> Hosted in Raipur
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> Fuel & Driver Included
+                  </li>
+                </ul>
+              </div>
+
+              <a href="tel:9617037773" class="block w-full py-4 bg-transparent border border-cyan-400 text-cyan-400 rounded-xl font-bold hover:bg-cyan-400 hover:text-slate-900 transition-all duration-300">
+                  Book Local Ride
+              </a>
+            </div>
+
+            <!-- Card 2: Outstation -->
+            <div class="bg-slate-900 border border-slate-700 rounded-3xl p-8 md:p-10 text-center relative hover:shadow-neon transition-shadow duration-300 flex flex-col justify-between reveal" style="transition-delay: 100ms;">
+              <div class="absolute top-0 right-0 transform translate-x-2 -translate-y-2">
+                <div class="bg-cyan-400 text-slate-900 font-bold px-4 py-1 text-xs rounded-bl-xl rounded-tr-xl shadow-lg">
+                    POPULAR
+                </div>
+              </div>
+
+              <div>
+                <div class="text-slate-400 font-medium tracking-widest uppercase mb-4 text-sm">Outstation Journey</div>
+                <h3 class="text-2xl font-bold text-white mb-2">Per Kilometer</h3>
+                <div class="flex items-end justify-center gap-2 mb-4">
+                  <span class="text-5xl font-bold text-white">₹12</span>
+                  <span class="text-xl text-slate-400 font-medium mb-3">/ km</span>
+                </div>
+                <p class="text-cyan-400 font-semibold mb-6">Pan-India Service</p>
+                
+                <div class="h-px w-full bg-slate-800 my-6"></div>
+                
+                <ul class="text-slate-300 space-y-3 text-left mx-auto max-w-xs mb-8">
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> 10% Off Applied at Checkout
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> Valid for all Outstation Trips
+                  </li>
+                  <li class="flex items-center gap-3">
+                    <i data-lucide="check" class="text-cyan-400 w-5 h-5 flex-shrink-0"></i> Professional Drivers
+                  </li>
+                </ul>
+              </div>
+
+              <a href="tel:9617037773" class="block w-full py-4 bg-cyan-400 text-slate-900 rounded-xl font-bold hover:bg-cyan-300 transition-all duration-300 shadow-neon">
+                  Book Outstation
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="py-24 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Get In <span class="text-cyan-400">Touch</span></h2>
+            <div class="w-24 h-1 bg-cyan-400 mx-auto rounded-full shadow-neon"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <a href="tel:9617037773" class="bg-slate-800 p-8 rounded-2xl flex flex-col items-center text-center border border-slate-700 hover:border-cyan-400 hover:shadow-neon transition-all duration-300 group reveal" style="transition-delay: 0ms;">
+              <div class="mb-4 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                <i data-lucide="phone" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Call Us (Primary)</h3>
+              <p class="text-cyan-400 font-medium">9617037773</p>
+            </a>
+
+            <!-- Card 2 -->
+            <a href="tel:9131727776" class="bg-slate-800 p-8 rounded-2xl flex flex-col items-center text-center border border-slate-700 hover:border-cyan-400 hover:shadow-neon transition-all duration-300 group reveal" style="transition-delay: 100ms;">
+              <div class="mb-4 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                <i data-lucide="phone" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Call Us (Secondary)</h3>
+              <p class="text-cyan-400 font-medium">9131727776</p>
+            </a>
+
+            <!-- Card 3 -->
+            <a href="https://wa.me/919617037773?text=I%20came%20from%20the%20website,%20I%20need%20help." target="_blank" class="bg-slate-800 p-8 rounded-2xl flex flex-col items-center text-center border border-slate-700 hover:border-cyan-400 hover:shadow-neon transition-all duration-300 group reveal" style="transition-delay: 200ms;">
+              <div class="mb-4 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                <i data-lucide="message-circle" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">WhatsApp</h3>
+              <p class="text-cyan-400 font-medium">Chat with us</p>
+            </a>
+
+            <!-- Card 4 -->
+            <a href="mailto:rapidzap3@gmail.com" class="bg-slate-800 p-8 rounded-2xl flex flex-col items-center text-center border border-slate-700 hover:border-cyan-400 hover:shadow-neon transition-all duration-300 group reveal" style="transition-delay: 300ms;">
+              <div class="mb-4 text-slate-400 group-hover:text-cyan-400 transition-colors">
+                <i data-lucide="mail" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-white mb-2">Email</h3>
+              <p class="text-cyan-400 font-medium">rapidzap3@gmail.com</p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Payment Section -->
+      <section id="payment" class="py-24 bg-slate-850 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 border border-cyan-500/30 p-10 rounded-3xl shadow-[0_0_50px_rgba(34,211,238,0.1)] relative overflow-hidden reveal">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-blue-600"></div>
+            
+            <h2 class="text-3xl font-bold text-white mb-8">Secure <span class="text-cyan-400">Payment</span></h2>
+            
+            <div class="flex flex-col items-center justify-center gap-6">
+              
+              <div class="w-full max-w-md">
+                <label class="block text-slate-400 text-sm mb-2">UPI ID</label>
+                <div class="flex items-center gap-2 bg-slate-950 p-4 rounded-xl border border-slate-700 group focus-within:border-cyan-400 transition-colors">
+                  <span class="flex-1 text-left text-xl font-mono text-cyan-400 break-all" id="upi-id">rapidzap31@ybl</span>
+                  <button onclick="copyToClipboard()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors" title="Copy UPI ID">
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <p class="text-slate-400 text-sm max-w-lg mt-4">
+                Please verify the UPI ID before making any transactions. 
+                Once payment is complete, share the screenshot on WhatsApp.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-12 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="text-center md:text-left">
+          <h3 class="text-2xl font-bold text-white mb-2">RAPID<span class="text-cyan-400">CAB</span></h3>
+          <p class="text-slate-400 text-sm">
+            Safe, Reliable, and Fast cab services in Raipur, Chhattisgarh.
+          </p>
+        </div>
+        
+        <div class="flex gap-6">
+          <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+          <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+          <a href="#" class="text-slate-400 hover:text-cyan-400 transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+        </div>
+
+        <div class="text-center md:text-right text-slate-500 text-sm">
+          <p>&copy; <span id="year"></span> Rapid Cab. All rights reserved.</p>
+          <p class="mt-1">rapidzap3@gmail.com</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+      // Initialize Icons
+      lucide.createIcons();
+
+      // Set Year
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Copy UPI Function
+      function copyToClipboard() {
+        const upiId = document.getElementById('upi-id').innerText;
+        navigator.clipboard.writeText(upiId).then(() => {
+          alert('UPI ID copied to clipboard!');
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      }
+
+      // Mobile Menu Toggle
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
+      const mobileIcon = mobileBtn.querySelector('i');
+
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        // Simple icon toggle logic (menu <-> x)
+        // Since lucide icons are SVGs after rendering, we can't easily swap the data-lucide attribute dynamically without re-rendering.
+        // For simplicity in this single file, we'll stick to the menu icon or just toggle visibility.
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+
+      // Custom Cursor Logic (Vanilla JS)
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorTrail = document.getElementById('cursor-trail');
+      
+      let mouseX = 0;
+      let mouseY = 0;
+      let trailX = 0;
+      let trailY = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        // Immediate update for dot
+        cursorDot.style.left = mouseX + 'px';
+        cursorDot.style.top = mouseY + 'px';
+      });
+
+      // Smooth trail animation loop
+      function animateCursor() {
+        // Lerp factor
+        const strength = 0.15;
+        
+        trailX += (mouseX - trailX) * strength;
+        trailY += (mouseY - trailY) * strength;
+        
+        cursorTrail.style.left = trailX + 'px';
+        cursorTrail.style.top = trailY + 'px';
+        
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      document.addEventListener('mousedown', () => {
+        cursorTrail.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        cursorDot.style.transform = 'translate(-50%, -50%) scale(1.5)';
+      });
+
+      document.addEventListener('mouseup', () => {
+        cursorTrail.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+      });
+
+      // Scroll Animation (Intersection Observer)
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target); // Only animate once
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>
