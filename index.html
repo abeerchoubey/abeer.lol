@@ -1,155 +1,2241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abeer Choubey | Developer & Pentester</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Abeer Choubey — Backend Engineer & Systems Architect. The invisible layer, made deliberately.">
+<title>Abeer Choubey · Backend Engineer & Systems Architect</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<style>
+:root {
+  --void:    #060608;
+  --chamber: #0D0D12;
+  --shell:   #141419;
+  --seam:    #1E1E28;
+  --muted:   #565668;
+  --ash:     #9898AA;
+  --bone:    #F0ECE6;
+  --signal:  #C8F564;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+*::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--void);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--bone);
+  background: var(--void);
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--signal); color: var(--void); }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--seam); border-radius: 2px; }
+::-moz-scrollbar { width: 4px; }
+::-moz-scrollbar-track { background: var(--void); }
+::-moz-scrollbar-thumb { background: var(--seam); border-radius: 2px; }
+
+a { color: inherit; text-decoration: none; }
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--shell);
+  color: var(--signal);
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  z-index: 10000;
+  border: 1px solid var(--signal);
+  border-radius: 4px;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 8px; }
+
+/* ═══ ARCH GRID ═══ */
+#arch-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(240, 236, 230, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 236, 230, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 30%, transparent 90%);
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 30%, transparent 90%);
+}
+
+/* ═══ CURSOR ═══ */
+#cursor-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: var(--bone);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+#cursor-ring {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 0.5px solid var(--seam);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  transition: width 0.3s var(--ease-spring),
+              height 0.3s var(--ease-spring),
+              border-color 0.2s ease,
+              background 0.2s ease;
+  will-change: transform, width, height;
+}
+
+#cursor-ring.crosshair-mode {
+  width: 16px;
+  height: 16px;
+  border-color: var(--bone);
+  border-radius: 0;
+  border-top: 0.5px solid transparent;
+  border-bottom: 0.5px solid transparent;
+}
+
+#cursor-ring.cta-mode {
+  background: var(--signal);
+  border-color: var(--signal);
+  width: 28px;
+  height: 28px;
+}
+
+#cursor-ring.link-mode {
+  width: 36px;
+  height: 36px;
+  border-color: var(--signal);
+  background: rgba(200, 245, 100, 0.06);
+}
+
+/* ═══ SIGNAL GRID ═══ */
+#signal-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+
+/* ═══ NAVIGATION ═══ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+nav > * { pointer-events: auto; }
+
+nav .nav-brand {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+nav .nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+nav .nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+nav .nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--signal);
+  transition: width 0.3s var(--ease-spring);
+}
+
+nav .nav-links a:hover {
+  color: var(--bone);
+}
+
+nav .nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ═══ SECTION SHARED ═══ */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--signal);
+  margin-bottom: 24px;
+}
+
+.section-label .label-line {
+  display: inline-block;
+  width: 40px;
+  height: 0.5px;
+  background: var(--signal);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--bone);
+  margin-bottom: 64px;
+  line-height: 1.2;
+}
+
+/* ═══ HERO ═══ */
+#section-hero {
+  height: 100vh;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+#section-hero .hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 400;
+  color: var(--bone);
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+#section-hero .hero-name .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+#section-hero .hero-name .char.space { width: 0.3em; }
+
+#section-hero .hero-descriptor {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--ash);
+  margin-bottom: 12px;
+  opacity: 0;
+}
+
+#section-hero .hero-location {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  opacity: 0;
+}
+
+#section-hero .scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  right: 48px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0;
+}
+
+/* ═══ SIGNAL ═══ */
+#section-signal {
+  min-height: 100vh;
+  padding: 140px 80px;
+  background: linear-gradient(to bottom, var(--void), var(--chamber));
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#section-signal .signal-statement {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 72px);
+  font-weight: 400;
+  color: var(--bone);
+  line-height: 1.2;
+  max-width: 840px;
+  margin-bottom: 48px;
+}
+
+#section-signal .signal-support {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ash);
+  max-width: 520px;
+  line-height: 1.75;
+}
+
+#section-signal .oscilloscope {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+#section-signal .oscilloscope svg {
+  display: block;
+}
+
+/* ═══ ARCHITECTURE ═══ */
+#section-arch {
+  min-height: 200vh;
+  background: var(--chamber);
+  position: relative;
+  z-index: 1;
+}
+
+#section-arch .arch-inner {
+  padding: 120px 80px;
+}
+
+.arch-header {
+  position: relative;
+  margin-bottom: 80px;
+}
+
+#arch-diagram-wrap {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#arch-diagram {
+  width: 100%;
+  display: block;
+}
+
+.arch-tooltip {
+  position: absolute;
+  background: var(--shell);
+  border: 0.5px solid var(--seam);
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  max-width: 280px;
+  z-index: 50;
+  color: var(--ash);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s var(--ease-spring);
+  line-height: 1.5;
+}
+
+.arch-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.arch-footnote {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 40px;
+  opacity: 0;
+  text-align: center;
+}
+
+/* ═══ WORK ═══ */
+#section-work {
+  background: linear-gradient(to bottom, var(--chamber), var(--void));
+  position: relative;
+  z-index: 1;
+  padding: 120px 0 0 0;
+}
+
+.work-label-wrap {
+  padding: 0 80px;
+  margin-bottom: 0;
+}
+
+.project-chapter {
+  padding: 80px;
+  border-top: 0.5px solid var(--seam);
+  position: relative;
+}
+
+.project-chapter .chapter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.project-chapter .chapter-number {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.project-chapter .project-name {
+  font-family: var(--font-sans);
+  font-size: 40px;
+  font-weight: 300;
+  color: var(--bone);
+  margin-bottom: 8px;
+}
+
+.project-chapter .project-descriptor {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--signal);
+  margin-bottom: 24px;
+}
+
+.project-chapter .project-description {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ash);
+  max-width: 440px;
+  margin-bottom: 32px;
+}
+
+.project-chapter .mini-arch {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.project-chapter .project-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ash);
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-chapter .project-link:hover { color: var(--signal); }
+
+.project-chapter .system-detail {
+  background: var(--shell);
+  border: 0.5px solid var(--seam);
+  border-radius: 4px;
+  padding: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ash);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.system-detail .sd-comment { color: var(--muted); }
+.system-detail .sd-keyword { color: var(--signal); }
+.system-detail .sd-string { color: var(--ash); }
+.system-detail .sd-type { color: var(--bone); }
+
+.project-separator {
+  width: 100%;
+  height: 0.5px;
+  background: var(--seam);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-separator .pulse-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: var(--signal);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 8px var(--signal);
+}
+
+/* ═══ LAB ═══ */
+#section-lab {
+  background: var(--void);
+  padding: 140px 80px;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+#section-lab .lab-statement {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 400;
+  color: var(--bone);
+  max-width: 760px;
+  line-height: 1.2;
+  margin-bottom: 64px;
+}
+
+.lab-diagram-container {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.lab-diagram-container #homelab-diagram {
+  flex: 1;
+  min-width: 0;
+  max-width: 860px;
+}
+
+.lab-status-panel {
+  width: 200px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ash);
+  line-height: 2.2;
+  flex-shrink: 0;
+  background: var(--shell);
+  border: 0.5px solid var(--seam);
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.lab-status-panel .status-label { color: var(--muted); }
+.lab-status-panel .status-value { color: var(--signal); }
+
+.lab-description {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ash);
+  max-width: 540px;
+  line-height: 1.75;
+  margin-top: 48px;
+}
+
+/* ═══ PRINCIPLES ═══ */
+#section-principles {
+  background: linear-gradient(to bottom, var(--void), var(--chamber));
+  padding: 140px 80px;
+  min-height: 80vh;
+  position: relative;
+  z-index: 1;
+}
+
+.principle {
+  padding-bottom: 64px;
+  border-bottom: 0.5px solid var(--seam);
+  margin-bottom: 64px;
+}
+
+.principle:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.principle .principle-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.principle .principle-text {
+  font-family: var(--font-sans);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 300;
+  color: var(--bone);
+  max-width: 640px;
+  line-height: 1.4;
+}
+
+/* ═══ CONNECT ═══ */
+#section-connect {
+  background: var(--void);
+  padding: 140px 80px;
+  min-height: 90vh;
+  position: relative;
+  z-index: 1;
+}
+
+#section-connect .connect-statement {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 88px);
+  font-weight: 400;
+  color: var(--bone);
+  line-height: 1.1;
+  margin-bottom: 32px;
+}
+
+#section-connect .connect-support {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ash);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 80px;
+}
+
+.connect-links { max-width: 720px; }
+
+.connect-link-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 0.5px solid var(--seam);
+  position: relative;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.connect-link-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--shell);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: -1;
+}
+
+.connect-link-row:hover {
+  border-bottom-color: var(--signal);
+}
+
+.connect-link-row:hover::before { opacity: 1; }
+
+.connect-link-row .cl-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.connect-link-row .cl-text {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--ash);
+  transition: color 0.2s ease;
+  flex: 1;
+}
+
+.connect-link-row:hover .cl-text { color: var(--bone); }
+
+.connect-link-row .cl-arrow {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--muted);
+  display: inline-block;
+  transition: transform 0.2s var(--ease-spring), color 0.2s ease;
+  transform-origin: left center;
+}
+
+.connect-link-row:hover .cl-arrow {
+  transform: translateX(8px);
+  color: var(--signal);
+}
+
+.connect-footer {
+  margin-top: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+/* ═══ FOCUS / ACCESSIBILITY ═══ */
+*:focus-visible {
+  outline: 1.5px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  #cursor-dot, #cursor-ring { display: none !important; }
+
+  nav { padding: 20px 24px; }
+  nav .nav-links { gap: 20px; }
+  nav .nav-links a { font-size: 10px; }
+
+  #section-hero { padding: 0 32px; }
+  #section-hero .hero-name { font-size: clamp(40px, 10vw, 56px); }
+  #section-hero .scroll-hint { right: 24px; bottom: 24px; }
+
+  #section-signal { padding: 80px 32px; }
+  #section-signal .signal-statement { font-size: clamp(28px, 7vw, 42px); }
+  #section-signal .oscilloscope { display: none; }
+
+  #section-arch { min-height: 150vh; }
+  #section-arch .arch-inner { padding: 80px 32px; }
+  #arch-diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  #arch-diagram { min-width: 760px; }
+
+  #section-work { padding: 80px 0 0 0; }
+  .work-label-wrap { padding: 0 32px; }
+  .project-chapter { padding: 60px 32px; }
+  .project-chapter .chapter-grid { grid-template-columns: 1fr; gap: 32px; }
+  .project-chapter .project-name { font-size: 32px; }
+  .project-chapter .system-detail { margin-top: 0; }
+
+  #section-lab { padding: 80px 32px; }
+  .lab-diagram-container { flex-direction: column; }
+  .lab-diagram-container #homelab-diagram-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .lab-diagram-container #homelab-diagram { min-width: 760px; }
+  .lab-status-panel { width: 100%; }
+
+  #section-principles { padding: 80px 32px; }
+  .principle .principle-text { font-size: clamp(18px, 5vw, 26px); }
+
+  #section-connect { padding: 80px 32px; }
+  #section-connect .connect-statement { font-size: clamp(32px, 8vw, 52px); }
+  .connect-link-row { gap: 12px; }
+  .connect-link-row .cl-label { width: 64px; }
+ .connect-footer { margin-top: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  #signal-grid { opacity: 0.04 !important; }
+}
+</style>
 </head>
 <body>
 
-    <!-- Custom Cursor Elements -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+<!-- ═══ ARCH GRID ═══ -->
+<div id="arch-grid"></div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">AC<span class="dot">.</span></div>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="#products">Products</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<a href="#section-hero" class="skip-link">Skip to content</a>
 
-    <!-- Hero Section -->
-    <header id="home">
-        <div class="container hero-content hidden">
-            <h3 class="mono-text">Hello, World! I am</h3>
-            <h1 class="neon-text glitch" data-text="Abeer Choubey">Abeer Choubey</h1>
-            <h2 class="role-text">Programmer & <span class="highlight">Ethical Hacker</span></h2>
-            <p class="hero-desc">14-year-old developer from Katni, MP. Building the future with code and securing it with skills.</p>
-            
-            <div class="cta-buttons">
-                <a href="https://wa.me/919425323937" target="_blank" class="btn btn-primary">
-                    <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
-                </a>
-                <a href="#contact" class="btn btn-secondary">Contact Me</a>
-            </div>
-        </div>
-    </header>
+<!-- ═══ CURSOR ═══ -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="container hidden">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-grid">
-                <div class="about-card">
-                    <i class="fa-solid fa-location-dot icon-large"></i>
-                    <h3>Location</h3>
-                    <p>Katni, Madhya Pradesh, India</p>
-                </div>
-                <div class="about-card">
-                    <i class="fa-solid fa-user-clock icon-large"></i>
-                    <h3>Age</h3>
-                    <p>14 Years Old</p>
-                </div>
-                <div class="about-card">
-                    <i class="fa-solid fa-hand-fist icon-large"></i>
-                    <h3>Hobbies</h3>
-                    <p>Karate Practitioner</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ═══ SIGNAL GRID ═══ -->
+<canvas id="signal-grid"></canvas>
 
-    <!-- Skills & Certifications -->
-    <section id="skills">
-        <div class="container hidden">
-            <h2 class="section-title">Achievements & Skills</h2>
-            <div class="skills-wrapper">
-                
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fa-solid fa-shield-halved"></i>
-                        <h3>Cybersecurity</h3>
-                    </div>
-                    <p>Certified in Ethical Hacking & PenTesting. Securing systems one vulnerability at a time.</p>
-                </div>
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="nav-brand">AC</div>
+  <div class="nav-links">
+    <a href="#section-work" data-cursor="link" aria-label="Jump to work section">[work]</a>
+    <a href="#section-lab" data-cursor="link" aria-label="Jump to homelab section">[lab]</a>
+    <a href="#section-connect" data-cursor="link" aria-label="Jump to connect section">[connect]</a>
+  </div>
+</nav>
 
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fa-solid fa-robot"></i>
-                        <h3>AI Engineering</h3>
-                    </div>
-                    <p>Certified AI Prompt Engineering. Mastering the art of communicating with Large Language Models.</p>
-                </div>
+<!-- ═══ HERO ═══ -->
+<section id="section-hero" aria-label="Introduction">
+  <h1 class="hero-name" id="hero-name">Abeer Choubey</h1>
+  <p class="hero-descriptor" id="hero-descriptor">Backend Engineer · Systems Architect</p>
+  <p class="hero-location" id="hero-location">// Bengaluru, India&nbsp;&nbsp;·&nbsp;&nbsp;Available for opportunities</p>
+  <span class="scroll-hint" id="scroll-hint">↓ scroll</span>
+</section>
 
-                <div class="skill-box">
-                    <div class="skill-header">
-                        <i class="fa-solid fa-code"></i>
-                        <h3>Competitive Coding</h3>
-                    </div>
-                    <p>AtCoder.jp India Rank <strong>#35417</strong> (Hackathon). Passionate problem solver.</p>
-                </div>
-               
-            </div>
-        </div>
-        
-    </section>
-    <!-- Resume -->
-    <section id="resume">
-        <div class="container hidden">
-            <h2 class="section-title">Resume</h2>
-                <p> </p>
-                <a href="https://docs.google.com/document/d/1kXa5WIXGFQj6vCMYWtS3l5ZFuelw3axJ0Ox-JuFZXdU/edit?usp=sharing" target="_blank" class="btn btn-primary">
-                    <i class="fa-solid fa-user"></i> View Resume
-                </a>
-        </div>
-    </section>
-    <!-- Products Section -->
-    <section id="products">
-        <div class="container hidden">
-            <h2 class="section-title">My Products</h2>
-            <div class="product-banner">
-                <p>Check out my latest software, tools, and services directly on my WhatsApp Catalogue.</p>
-                <a href="https://wa.me/c/919425323937" target="_blank" class="btn btn-primary">
-                    <i class="fa-solid fa-store"></i> View Catalogue
-                </a>
-            </div>
-        </div>
-    </section>
+<!-- ═══ SIGNAL ═══ -->
+<section id="section-signal" aria-label="Philosophy">
+  <h2 class="signal-statement" id="signal-statement">The systems behind the products you trust were built by engineers like me.</h2>
+  <p class="signal-support" id="signal-support">I design infrastructure that scales, backends that hold, and systems that don't wake their owners up at 3am. The invisible layer — made deliberately.</p>
+  <div class="oscilloscope" id="oscilloscope">
+    <svg width="120" height="80" viewBox="0 0 120 80" fill="none" aria-hidden="true">
+      <path id="osc-line-1" d="M0,20 Q30,10 60,20 T120,20" stroke="var(--signal)" stroke-width="0.75" opacity="0.4" fill="none"/>
+      <path id="osc-line-2" d="M0,40 Q20,30 40,40 T80,40" stroke="var(--signal)" stroke-width="0.75" opacity="0.3" fill="none"/>
+      <path id="osc-line-3" d="M0,60 Q14,54 28,60 T56,60" stroke="var(--signal)" stroke-width="0.75" opacity="0.2" fill="none"/>
+    </svg>
+  </div>
+</section>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container hidden">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-links">
-                <a href="mailto:sentinel.loqs@proton.me" class="contact-item">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>sentinel.loqs@proton.me</span>
-                </a>
-                <a href="https://github.com/abeerchoubey" target="_blank" class="contact-item">
-                    <i class="fa-brands fa-github"></i>
-                    <span>github.com/abeerchoubey</span>
-                </a>
-                <a href="https://wa.me/919425323937" target="_blank" class="contact-item">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    <span>+91 94253 23937</span>
-                </a>
-            </div>
-        </div>
-        <footer>
-            <p>&copy; 2025 Abeer Choubey. Styled with <span style="color:var(--neon);">Code</span>.</p>
-        </footer>
-    </section>
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="section-arch" aria-label="Architecture philosophy">
+  <div class="arch-inner">
+    <div class="arch-header">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <span>[ ARCHITECTURE ]</span>
+      </div>
+      <h2 class="section-title" style="font-size: clamp(36px, 5vw, 64px);">How I think about systems</h2>
+    </div>
+    <div id="arch-diagram-wrap">
+      <svg id="arch-diagram" viewBox="0 0 900 660" fill="none" role="img" aria-label="System architecture diagram showing layers from client to observability">
+        <defs>
+          <filter id="refract">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" seed="2"/>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
 
-    <script src="script.js"></script>
+        <!-- Layer 1: CLIENT -->
+        <g class="arch-layer" data-layer="CLIENT" data-cursor="arch" role="button" tabindex="0" aria-label="CLIENT layer: Browser, Mobile, API Consumer" style="opacity:0;">
+          <rect x="100" y="20" width="700" height="60" rx="4" fill="none" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="120" y="45" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">CLIENT</text>
+          <text x="120" y="65" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">Browser · Mobile · API Consumer</text>
+        </g>
+
+        <!-- Connectors 1→2 -->
+        <line class="arch-connector" data-from="CLIENT" data-to="EDGE" x1="300" y1="80" x2="300" y2="120" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="CLIENT" data-to="EDGE" x1="600" y1="80" x2="600" y2="120" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+
+        <!-- Layer 2: EDGE -->
+        <g class="arch-layer" data-layer="EDGE" data-cursor="arch" role="button" tabindex="0" aria-label="EDGE layer: CDN, Load Balancer, Rate Limiter" style="opacity:0;">
+          <rect x="100" y="120" width="700" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="120" y="145" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">EDGE</text>
+          <text x="120" y="165" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">CDN · Load Balancer · Rate Limiter</text>
+        </g>
+
+        <!-- Connectors 2→3 -->
+        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="250" y1="180" x2="250" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="450" y1="180" x2="450" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="650" y1="180" x2="650" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+
+        <!-- Layer 3: APPLICATION (highlighted, with refractive overlay) -->
+        <g class="arch-layer" data-layer="APPLICATION" data-cursor="arch" role="button" tabindex="0" aria-label="APPLICATION layer: REST API, Auth, Business Logic, Background Jobs" style="opacity:0;">
+          <rect x="100" y="220" width="700" height="80" rx="4" fill="var(--shell)" stroke="var(--signal)" stroke-width="0.5"/>
+          <text x="120" y="248" fill="var(--bone)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">APPLICATION</text>
+          <text x="120" y="278" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">REST API · Auth · Business Logic · Background Jobs</text>
+        </g>
+        <!-- Refractive overlay -->
+        <rect id="refract-overlay" x="100" y="220" width="700" height="80" rx="4" fill="none" filter="url(#refract)" pointer-events="none" opacity="0.4" style="opacity:0;"/>
+
+        <!-- Connectors 3→4 -->
+        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="200" y1="300" x2="200" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="450" y1="300" x2="450" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="700" y1="300" x2="700" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+
+        <!-- Layer 4: DATA (three sub-panels) -->
+        <g class="arch-layer" data-layer="DATA" data-cursor="arch" role="button" tabindex="0" aria-label="DATA layer: PostgreSQL, Redis Cache, Message Queue" style="opacity:0;">
+          <rect x="100" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="120" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">PostgreSQL</text>
+          <text x="120" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Source of truth</text>
+
+          <rect x="340" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="360" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">Redis Cache</text>
+          <text x="360" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Speed layer</text>
+
+          <rect x="580" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="600" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">Message Queue</text>
+          <text x="600" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Async dispatch</text>
+        </g>
+
+        <!-- Connectors 4→5 -->
+        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="250" y1="410" x2="250" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="450" y1="410" x2="450" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="650" y1="410" x2="650" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+
+        <!-- Layer 5: INFRASTRUCTURE -->
+        <g class="arch-layer" data-layer="INFRASTRUCTURE" data-cursor="arch" role="button" tabindex="0" aria-label="INFRASTRUCTURE layer: Docker, Linux, Networking, DNS" style="opacity:0;">
+          <rect x="100" y="460" width="700" height="60" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="120" y="485" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">INFRASTRUCTURE</text>
+          <text x="120" y="505" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">Docker · Linux · Networking · DNS</text>
+        </g>
+
+        <!-- Connectors 5→6 -->
+        <line class="arch-connector" data-from="INFRASTRUCTURE" data-to="OBSERVABILITY" x1="300" y1="520" x2="300" y2="560" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+        <line class="arch-connector" data-from="INFRASTRUCTURE" data-to="OBSERVABILITY" x1="600" y1="520" x2="600" y2="560" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
+
+        <!-- Layer 6: OBSERVABILITY (dashed) -->
+        <g class="arch-layer" data-layer="OBSERVABILITY" data-cursor="arch" role="button" tabindex="0" aria-label="OBSERVABILITY layer: Logs, Metrics, Traces, Alerts" style="opacity:0;">
+          <rect x="100" y="560" width="700" height="50" rx="4" fill="none" stroke="var(--seam)" stroke-width="0.5" stroke-dasharray="4 4"/>
+          <text x="120" y="582" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">OBSERVABILITY</text>
+          <text x="120" y="600" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Logs · Metrics · Traces · Alerts</text>
+        </g>
+
+        <!-- Pulse circles container -->
+        <g id="arch-pulses"></g>
+      </svg>
+      <div class="arch-tooltip" id="arch-tooltip"></div>
+    </div>
+    <p class="arch-footnote" id="arch-footnote">// This architecture pattern underlies most of the projects below</p>
+  </div>
+</section>
+
+<!-- ═══ WORK ═══ -->
+<section id="section-work" aria-label="Projects">
+  <div class="work-label-wrap">
+    <div class="section-label" style="margin-bottom: 48px;">
+      <span class="label-line"></span>
+      <span>[ WORK ]</span>
+    </div>
+  </div>
+
+  <!-- Project 1: ARK CRM -->
+  <div class="project-chapter" data-project="ark">
+    <div class="chapter-grid">
+      <div class="chapter-left">
+        <div class="chapter-number">#01</div>
+        <h3 class="project-name">ARK CRM</h3>
+        <div class="project-descriptor">Cold-pressed oil business — full-stack CRM</div>
+        <p class="project-description">Built for a solopreneur who needed enterprise CRM without the enterprise overhead. React frontend, Supabase backend. The architecture challenge was making complex relational data feel simple to a non-technical user without sacrificing data integrity.</p>
+        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="ARK CRM architecture: React UI to Supabase Auth to PostgreSQL to Row Level Security">
+          <rect x="10" y="20" width="90" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="55" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">React UI</text>
+          <line x1="100" y1="38" x2="130" y2="38" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="115" cy="38" r="2" fill="var(--signal)"/>
+          <rect x="130" y="20" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="185" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Supabase Auth</text>
+          <line x1="240" y1="38" x2="270" y2="38" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="255" cy="38" r="2" fill="var(--signal)"/>
+          <rect x="270" y="20" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="325" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PostgreSQL</text>
+          <line x1="325" y1="56" x2="325" y2="80" stroke="var(--seam)" stroke-width="0.5"/>
+          <rect x="250" y="80" width="150" height="30" rx="4" fill="none" stroke="var(--signal)" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <text x="325" y="100" fill="var(--signal)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Row Level Security</text>
+        </svg>
+      </div>
+      <div class="chapter-right">
+        <div class="system-detail"><span class="sd-comment">-- ARK CRM core schema</span>
+
+<span class="sd-keyword">TABLE</span> customers (
+  id          uuid <span class="sd-type">PRIMARY KEY</span>,
+  name        text <span class="sd-keyword">NOT NULL</span>,
+  phone       text,
+  tier        enum(<span class="sd-string">'standard'</span>, <span class="sd-string">'wholesale'</span>),
+  created_at  timestamptz <span class="sd-keyword">DEFAULT</span> now()
+);
+
+<span class="sd-keyword">TABLE</span> orders (
+  id          uuid <span class="sd-type">PRIMARY KEY</span>,
+  customer_id uuid <span class="sd-keyword">REFERENCES</span> customers,
+  total_ml    integer,
+  status      enum(<span class="sd-string">'pending'</span>, <span class="sd-string">'fulfilled'</span>),
+  created_at  timestamptz <span class="sd-keyword">DEFAULT</span> now()
+);</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-separator"><div class="pulse-dot"></div></div>
+
+  <!-- Project 2: Veylox -->
+  <div class="project-chapter" data-project="veylox">
+    <div class="chapter-grid">
+      <div class="chapter-left">
+        <div class="chapter-number">#02</div>
+        <h3 class="project-name">Veylox</h3>
+        <div class="project-descriptor">Premium digital agency — performance-first frontend</div>
+        <p class="project-description">An agency landing page built with the care of a product. Vite + React. The design challenge was creating a premium feel without over-engineering the build. Result: sub-1s FCP, Lighthouse 97+, zero runtime dependencies in production.</p>
+        <a href="https://veylox.abeer.lol" class="project-link" data-cursor="link" target="_blank" rel="noopener" aria-label="Visit Veylox website">veylox.abeer.lol ↗</a>
+        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" style="margin-top:24px;" role="img" aria-label="Veylox architecture: Vite build to React components to static host to CDN">
+          <rect x="10" y="40" width="80" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="50" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Vite Build</text>
+          <line x1="90" y1="58" x2="120" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="105" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="120" y="40" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="175" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">React Components</text>
+          <line x1="230" y1="58" x2="260" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="245" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="260" y="40" width="60" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="290" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Static</text>
+          <line x1="320" y1="58" x2="350" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="335" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="350" y="40" width="42" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="371" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">CDN</text>
+        </svg>
+      </div>
+      <div class="chapter-right">
+        <div class="system-detail"><span class="sd-comment">// Veylox performance targets</span>
+
+FCP:  &lt; 0.9s
+LCP:  &lt; 1.4s
+CLS:  0.000
+TTI:  &lt; 1.8s
+
+<span class="sd-comment">Build output:</span>
+dist/   44 kB (gzipped)
+chunks: 3 (vendor split)
+images: WebP, lazy-loaded</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-separator"><div class="pulse-dot"></div></div>
+
+  <!-- Project 3: AI Compositor -->
+  <div class="project-chapter" data-project="ai-compositor">
+    <div class="chapter-grid">
+      <div class="chapter-left">
+        <div class="chapter-number">#03</div>
+        <h3 class="project-name">AI Compositor</h3>
+        <div class="project-descriptor">Compositional AI workflow engine</div>
+        <p class="project-description">An AI system that chains model calls into coherent multi-step workflows. The engineering challenge was managing state between inference calls without a traditional server — using event-driven architecture with a queue-backed job processor.</p>
+        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="AI Compositor architecture: Input to Queue to LLM Calls to State Machine to Output">
+          <rect x="10" y="44" width="56" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="38" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Input</text>
+          <line x1="66" y1="58" x2="86" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="76" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="86" y="44" width="56" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="114" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Queue</text>
+          <line x1="142" y1="58" x2="162" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="152" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="162" y="44" width="70" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="197" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">LLM Calls</text>
+          <line x1="232" y1="58" x2="252" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="242" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="252" y="44" width="70" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="287" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">State M.</text>
+          <line x1="322" y1="58" x2="342" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="332" cy="58" r="2" fill="var(--signal)"/>
+          <rect x="342" y="44" width="48" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="366" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Output</text>
+        </svg>
+      </div>
+      <div class="chapter-right">
+        <div class="system-detail"><span class="sd-comment">// AI Compositor flow</span>
+
+<span class="sd-keyword">STEP 1:</span> ingest(input)
+  → validate schema
+  → enqueue(job_id, payload)
+
+<span class="sd-keyword">STEP 2:</span> process(job_id)
+  → fetch context from cache
+  → call_model(prompt, context)
+  → write result → job_store
+
+<span class="sd-keyword">STEP 3:</span> compose(results[])
+  → merge outputs
+  → validate coherence
+  → emit final artifact</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-separator"><div class="pulse-dot"></div></div>
+
+  <!-- Project 4: GymLedger -->
+  <div class="project-chapter" data-project="gymledger">
+    <div class="chapter-grid">
+      <div class="chapter-left">
+        <div class="chapter-number">#04</div>
+        <h3 class="project-name">GymLedger</h3>
+        <div class="project-descriptor">Personal training tracker — built like a product</div>
+        <p class="project-description">A fitness tracking application built not because similar apps don't exist, but because building it right was the point. PostgreSQL stores every workout as an append-only log. The schema was designed for time-series queries before the first line of application code.</p>
+        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="GymLedger architecture: Input UI to API layer to PostgreSQL with time-series schema">
+          <rect x="10" y="44" width="80" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="50" y="65" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Input UI</text>
+          <line x1="90" y1="60" x2="120" y2="60" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="105" cy="60" r="2" fill="var(--signal)"/>
+          <rect x="120" y="44" width="70" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="155" y="65" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">API Layer</text>
+          <line x1="190" y1="60" x2="220" y2="60" stroke="var(--seam)" stroke-width="0.5"/>
+          <circle cx="205" cy="60" r="2" fill="var(--signal)"/>
+          <rect x="220" y="44" width="170" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="305" y="60" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PostgreSQL</text>
+          <text x="305" y="72" fill="var(--signal)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">time-series schema</text>
+        </svg>
+      </div>
+      <div class="chapter-right">
+        <div class="system-detail"><span class="sd-comment">-- GymLedger: append-only workout log</span>
+
+<span class="sd-keyword">TABLE</span> workout_sessions (
+  id         uuid <span class="sd-type">PRIMARY KEY</span>,
+  started_at timestamptz <span class="sd-keyword">NOT NULL</span>,
+  ended_at   timestamptz,
+  notes      text
+);
+
+<span class="sd-keyword">TABLE</span> exercise_sets (
+  id          uuid <span class="sd-type">PRIMARY KEY</span>,
+  session_id  uuid <span class="sd-keyword">REFERENCES</span> workout_sessions,
+  exercise    text <span class="sd-keyword">NOT NULL</span>,
+  reps        smallint,
+  weight_kg   numeric(5,2),
+  logged_at   timestamptz <span class="sd-keyword">DEFAULT</span> now()
+);</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LAB ═══ -->
+<section id="section-lab" aria-label="Homelab">
+  <div class="section-label">
+    <span class="label-line"></span>
+    <span>[ THE LAB ]</span>
+  </div>
+  <h2 class="lab-statement">The systems I build for myself are the ones that taught me everything.</h2>
+
+  <div class="lab-diagram-container">
+    <div id="homelab-diagram-wrap">
+      <svg id="homelab-diagram" viewBox="0 0 860 420" fill="none" role="img" aria-label="Homelab architecture showing hardware, services, and access layers">
+        <!-- ZONE 1: HARDWARE -->
+        <text x="10" y="20" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">HARDWARE</text>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="10" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="20" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Primary Server</text>
+          <text x="20" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">x86 · 16GB RAM · 2TB</text>
+          <circle cx="180" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="210" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="220" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Pi Cluster</text>
+          <text x="220" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">Pi 4 ×3 · ARM · Kubernetes</text>
+          <circle cx="380" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="410" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="420" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Network Switch</text>
+          <text x="420" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">Gigabit · VLAN-capable</text>
+          <circle cx="580" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
+        </g>
+
+        <!-- Connectors H→S -->
+        <line x1="100" y1="86" x2="100" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+        <line x1="300" y1="86" x2="300" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+        <line x1="500" y1="86" x2="500" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+
+        <!-- ZONE 2: SERVICES -->
+        <text x="10" y="120" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">SERVICES</text>
+
+        <!-- Row 1 -->
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="10" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="20" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Gitea</text>
+          <text x="20" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Self-hosted Git</text>
+          <circle cx="170" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="200" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="210" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Portainer</text>
+          <text x="210" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Container Mgmt</text>
+          <circle cx="360" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="390" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="400" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Uptime Kuma</text>
+          <text x="400" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Monitoring</text>
+          <circle cx="550" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+
+        <!-- Row 2 -->
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="10" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="20" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">PostgreSQL</text>
+          <text x="20" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Database</text>
+          <circle cx="170" cy="194" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="200" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="210" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Nginx Proxy</text>
+          <text x="210" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Reverse Proxy</text>
+          <circle cx="360" cy="194" r="3" fill="var(--muted)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="390" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="400" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Wireguard</text>
+          <text x="400" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">VPN</text>
+          <circle cx="550" cy="194" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+
+        <!-- Connectors S→A -->
+        <line x1="100" y1="228" x2="100" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+        <line x1="300" y1="228" x2="300" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+        <line x1="500" y1="228" x2="500" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+
+        <!-- ZONE 3: ACCESS -->
+        <text x="10" y="270" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">ACCESS</text>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="10" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="20" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Remote SSH</text>
+          <text x="20" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Terminal access</text>
+          <circle cx="170" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="200" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="210" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Tailscale</text>
+          <text x="210" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Mesh network</text>
+          <circle cx="360" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+        <g class="homelab-node" data-cursor="arch">
+          <rect x="390" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
+          <text x="400" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Cloudflare Tunnel</text>
+          <text x="400" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Public exposure</text>
+          <circle cx="550" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
+        </g>
+
+        <!-- Pulse container -->
+        <g id="lab-pulses"></g>
+      </svg>
+    </div>
+
+    <div class="lab-status-panel">
+      <div><span class="status-label">UPTIME</span> <span class="status-value">99.4%</span></div>
+      <div><span class="status-label">SERVICES</span> <span class="status-value">12 running</span></div>
+      <div><span class="status-label">STORAGE</span>  <span class="status-value">1.4 TB / 2 TB</span></div>
+      <div><span class="status-label">LAST BOOT</span> <span class="status-value">47d ago</span></div>
+    </div>
+  </div>
+
+  <p class="lab-description">The homelab is where the abstractions disappear. You can't pretend to understand networking until you've debugged your own DNS at midnight. Every production decision I make is informed by something I broke here first.</p>
+</section>
+
+<!-- ═══ PRINCIPLES ═══ -->
+<section id="section-principles" aria-label="Engineering principles">
+  <div class="section-label" style="margin-bottom: 80px;">
+    <span class="label-line"></span>
+    <span>[ HOW I BUILD ]</span>
+  </div>
+
+  <div class="principle" data-principle="1">
+    <div class="principle-label">on architecture</div>
+    <p class="principle-text">Design for failure. Everything else is a feature.</p>
+  </div>
+  <div class="principle" data-principle="2">
+    <div class="principle-label">on complexity</div>
+    <p class="principle-text">The simplest system that solves the real problem wins.</p>
+  </div>
+  <div class="principle" data-principle="3">
+    <div class="principle-label">on ownership</div>
+    <p class="principle-text">If it breaks at 3am, I should be the one who built it.</p>
+  </div>
+  <div class="principle" data-principle="4">
+    <div class="principle-label">on documentation</div>
+    <p class="principle-text">Undocumented systems are gifts to your future enemy.</p>
+  </div>
+</section>
+
+<!-- ═══ CONNECT ═══ -->
+<section id="section-connect" aria-label="Contact">
+  <div class="section-label" style="margin-bottom: 40px;">
+    <span class="label-line"></span>
+    <span>[ CONNECT ]</span>
+  </div>
+
+  <h2 class="connect-statement">Let's build something<br>that matters.</h2>
+  <p class="connect-support">Open to senior engineering roles, infrastructure consulting, and genuinely interesting problems.</p>
+
+  <div class="connect-links">
+    <a href="mailto:choubeyabeer@gmail.com" class="connect-link-row" data-cursor="link" aria-label="Send email to choubeyabeer@gmail.com">
+      <span class="cl-label">[EMAIL]</span>
+      <span class="cl-text">choubeyabeer@gmail.com</span>
+      <span class="cl-arrow">→</span>
+    </a>
+    <a href="mailto:sentinel.loqs@proton.me" class="connect-link-row" data-cursor="link" aria-label="Send email to sentinel.loqs@proton.me">
+      <span class="cl-label">[SECURE]</span>
+      <span class="cl-text">sentinel.loqs@proton.me</span>
+      <span class="cl-arrow">→</span>
+    </a>
+    <a href="https://github.com/abeerchoubey" target="_blank" rel="noopener" class="connect-link-row" data-cursor="link" aria-label="Visit GitHub profile github.com/abeerchoubey">
+      <span class="cl-label">[GITHUB]</span>
+      <span class="cl-text">github.com/abeerchoubey</span>
+      <span class="cl-arrow">→</span>
+    </a>
+    <a href="https://linkedin.com/in/abeerchoubey" target="_blank" rel="noopener" class="connect-link-row" data-cursor="link" aria-label="Visit LinkedIn profile linkedin.com/in/abeerchoubey">
+      <span class="cl-label">[LINKEDIN]</span>
+      <span class="cl-text">linkedin.com/in/abeerchoubey</span>
+      <span class="cl-arrow">→</span>
+    </a>
+    <div class="connect-link-row" data-cursor="link" aria-label="Discord username abeer.choubey">
+      <span class="cl-label">[DISCORD]</span>
+      <span class="cl-text">abeer.choubey</span>
+      <span class="cl-arrow">→</span>
+    </div>
+  </div>
+
+  <div class="connect-footer">Abeer Choubey © 2025  ·  Designed and built to be remembered</div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+  // ═══════════════════════════════════════
+  // GSAP REGISTER
+  // ═══════════════════════════════════════
+  if (window.gsap) {
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  }
+
+  // ═══════════════════════════════════════
+  // LENIS SMOOTH SCROLL
+  // ═══════════════════════════════════════
+  let lenis = null;
+  if (window.Lenis && !prefersReduced) {
+    lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      smoothWheel: true
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    if (window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+  }
+
+  // ═══════════════════════════════════════
+  // CUSTOM CURSOR
+  // ═══════════════════════════════════════
+  if (!isMobile) {
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    let mouseX = 0, mouseY = 0;
+
+    document.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.transform = 'translate(' + mouseX + 'px, ' + mouseY + 'px) translate(-50%, -50%)';
+    });
+
+    if (window.gsap && !prefersReduced) {
+      gsap.ticker.add(function() {
+        gsap.to(cursorRing, { x: mouseX, y: mouseY, duration: 0.12, ease: 'power2.out', overwrite: true });
+      });
+    } else {
+      document.addEventListener('mousemove', function(e) {
+        cursorRing.style.transform = 'translate(' + e.clientX + 'px, ' + e.clientY + 'px) translate(-50%, -50%)';
+      });
+    }
+
+    // Cursor hover states
+    document.querySelectorAll('[data-cursor]').forEach(function(el) {
+      el.addEventListener('mouseenter', function() {
+        const cursorType = el.getAttribute('data-cursor');
+        cursorRing.classList.remove('link-mode', 'crosshair-mode', 'cta-mode');
+        if (cursorType === 'link') cursorRing.classList.add('link-mode');
+        else if (cursorType === 'arch') cursorRing.classList.add('crosshair-mode');
+        else if (cursorType === 'cta') cursorRing.classList.add('cta-mode');
+      });
+      el.addEventListener('mouseleave', function() {
+        cursorRing.classList.remove('link-mode', 'crosshair-mode', 'cta-mode');
+      });
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // SIGNAL GRID CANVAS
+  // ═══════════════════════════════════════
+  const canvas = document.getElementById('signal-grid');
+  const ctx = canvas.getContext('2d');
+  let nodes = [];
+  let edges = [];
+  let pulses = [];
+  let canvasW = 0, canvasH = 0;
+  let canvasVisible = true;
+  let gridOpacity = 0.06;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvasW = canvas.width;
+    canvasH = canvas.height;
+  }
+
+  function initGrid() {
+    resizeCanvas();
+    nodes = [];
+    edges = [];
+    const nodeCount = Math.min(35, Math.floor(canvasW * canvasH / 45000) + 20);
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
+        x: Math.random() * canvasW,
+        y: Math.random() * canvasH,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        connections: 0
+      });
+    }
+    // Build edges
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180 && nodes[i].connections < 3 && nodes[j].connections < 3) {
+          edges.push({ a: i, b: j, dist: dist });
+          nodes[i].connections++;
+          nodes[j].connections++;
+        }
+      }
+    }
+  }
+
+  function spawnPulse() {
+    if (edges.length === 0) return;
+    const edge = edges[Math.floor(Math.random() * edges.length)];
+    pulses.push({
+      edge: edge,
+      progress: 0,
+      speed: 1 / (60 * 1.5 + Math.random() * 30)
+    });
+  }
+
+  function drawGrid() {
+    if (!canvasVisible) return;
+    ctx.clearRect(0, 0, canvasW, canvasH);
+
+    // Update positions
+    for (let n of nodes) {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > canvasW) n.vx *= -1;
+      if (n.y < 0 || n.y > canvasH) n.vy *= -1;
+    }
+
+    // Draw edges
+    for (let e of edges) {
+      const na = nodes[e.a], nb = nodes[e.b];
+      const distOpacity = Math.max(0, 1 - e.dist / 180) * gridOpacity * 5;
+      ctx.strokeStyle = 'rgba(200, 245, 100, ' + distOpacity + ')';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.stroke();
+    }
+
+    // Draw nodes
+    for (let n of nodes) {
+      ctx.fillStyle = 'rgba(200, 245, 100, ' + (gridOpacity * 5) + ')';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Draw pulses
+    for (let i = pulses.length - 1; i >= 0; i--) {
+      const p = pulses[i];
+      p.progress += p.speed;
+      if (p.progress >= 1) {
+        pulses.splice(i, 1);
+        continue;
+      }
+      const na = nodes[p.edge.a], nb = nodes[p.edge.b];
+      const px = na.x + (nb.x - na.x) * p.progress;
+      const py = na.y + (nb.y - na.y) * p.progress;
+      const pulseOpacity = Math.sin(p.progress * Math.PI) * 0.9;
+      ctx.fillStyle = 'rgba(200, 245, 100, ' + pulseOpacity + ')';
+      ctx.beginPath();
+      ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function animateGrid() {
+    drawGrid();
+    requestAnimationFrame(animateGrid);
+  }
+
+  if (!prefersReduced) {
+    initGrid();
+    animateGrid();
+    // Spawn pulses periodically
+    setInterval(function() {
+      if (canvasVisible && !prefersReduced) spawnPulse();
+    }, 6000 + Math.random() * 4000);
+  } else {
+    initGrid();
+    drawGrid();
+  }
+
+  window.addEventListener('resize', function() {
+    if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
+      initGrid();
+    }
+  });
+
+  document.addEventListener('visibilitychange', function() {
+    canvasVisible = !document.hidden;
+  });
+
+  // Fade in canvas on load
+  setTimeout(function() {
+    canvas.style.opacity = isMobile ? '0.04' : '0.06';
+  }, 100);
+
+  // ═══════════════════════════════════════
+  // HERO NAME — SPLIT INTO CHARS
+  // ═══════════════════════════════════════
+  const heroName = document.getElementById('hero-name');
+  const nameText = heroName.textContent;
+  heroName.innerHTML = '';
+  nameText.split('').forEach(function(char) {
+    const span = document.createElement('span');
+    span.className = char === ' ' ? 'char space' : 'char';
+    span.textContent = char === ' ' ? '\u00A0' : char;
+    heroName.appendChild(span);
+  });
+
+  // ═══════════════════════════════════════
+  // ENTRY ANIMATION TIMELINE
+  // ═══════════════════════════════════════
+  window.addEventListener('load', function() {
+    if (prefersReduced) {
+      // Show everything immediately
+      document.querySelectorAll('.char').forEach(function(c) { c.style.opacity = 1; c.style.transform = 'translateY(0)'; });
+      document.getElementById('hero-descriptor').style.opacity = 1;
+      document.getElementById('hero-location').style.opacity = 1;
+      document.getElementById('scroll-hint').style.opacity = 0.5;
+      document.querySelector('nav').style.opacity = 1;
+      return;
+    }
+
+    const chars = document.querySelectorAll('#hero-name .char');
+
+    const tl = gsap.timeline({ delay: 0.3 });
+
+    // Name characters
+    tl.to(chars, {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power3.out',
+      stagger: 0.04
+    }, 0.3);
+
+    // Descriptor
+    tl.to('#hero-descriptor', {
+      y: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, 1.4);
+
+    // Location
+    tl.to('#hero-location', {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out'
+    }, 1.7);
+
+    // Nav
+    tl.fromTo('nav', {
+      y: -8,
+      opacity: 0
+    }, {
+      y: 0,
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out'
+    }, 2.0);
+
+    // Scroll hint
+    tl.to('#scroll-hint', {
+      opacity: 0.6,
+      duration: 0.4
+    }, 2.2);
+  });
+
+  // ═══════════════════════════════════════
+  // NAV SCROLL DIRECTION
+  // ═══════════════════════════════════════
+  let lastScrollY = 0;
+  let navHidden = false;
+
+  function handleNavScroll(scrollY) {
+    const nav = document.querySelector('nav');
+    const direction = scrollY > lastScrollY ? 1 : -1;
+
+    if (direction === 1 && scrollY > 80 && !navHidden) {
+      gsap.to(nav, { y: -80, duration: 0.3, ease: 'power2.inOut' });
+      navHidden = true;
+    } else if ((direction === -1 || scrollY <= 80) && navHidden) {
+      gsap.to(nav, { y: 0, duration: 0.3, ease: 'power2.out' });
+      navHidden = false;
+    }
+
+    lastScrollY = scrollY;
+  }
+
+  if (lenis) {
+    lenis.on('scroll', function(e) {
+      handleNavScroll(e.scroll || window.scrollY);
+    });
+  } else {
+    window.addEventListener('scroll', function() {
+      handleNavScroll(window.scrollY);
+    }, { passive: true });
+  }
+
+  // ═══════════════════════════════════════
+  // NAV LINK SMOOTH SCROLL
+  // ═══════════════════════════════════════
+  document.querySelectorAll('nav .nav-links a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) {
+        if (lenis) {
+          lenis.scrollTo(target, { offset: 0, duration: 1.2 });
+        } else if (window.gsap) {
+          gsap.to(window, { duration: 1, scrollTo: target, ease: 'power2.inOut' });
+        } else {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // SIGNAL SECTION SCROLL REVEAL
+  // ═══════════════════════════════════════
+  if (window.ScrollTrigger && !prefersReduced) {
+    gsap.fromTo('#signal-statement', {
+      y: 32, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#section-signal', start: 'top 75%', once: true }
+    });
+
+    gsap.fromTo('#signal-support', {
+      y: 32, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.15,
+      scrollTrigger: { trigger: '#section-signal', start: 'top 75%', once: true }
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // OSCILLOSCOPE ANIMATION
+  // ═══════════════════════════════════════
+  if (!isMobile && !prefersReduced) {
+    const oscLines = ['osc-line-1', 'osc-line-2', 'osc-line-3'];
+    oscLines.forEach(function(id, i) {
+      const line = document.getElementById(id);
+      if (line) {
+        const baseD = line.getAttribute('d');
+        const durations = [3, 4, 5];
+        const amplitudes = [4, 3, 2];
+        let startTime = performance.now();
+
+        function animateOsc() {
+          const elapsed = (performance.now() - startTime) / 1000;
+          const cycle = elapsed / durations[i];
+          const phase = cycle * Math.PI * 2;
+          const amp = amplitudes[i];
+
+          // Modify the path d to oscillate
+          if (i === 0) {
+            line.setAttribute('d', 'M0,' + (20 + Math.sin(phase) * amp) +
+              ' Q30,' + (10 + Math.sin(phase + 1) * amp) +
+              ' 60,' + (20 + Math.sin(phase + 2) * amp) +
+              ' T120,' + (20 + Math.sin(phase + 3) * amp));
+          } else if (i === 1) {
+            line.setAttribute('d', 'M0,' + (40 + Math.sin(phase) * amp) +
+              ' Q20,' + (30 + Math.sin(phase + 1) * amp) +
+              ' 40,' + (40 + Math.sin(phase + 2) * amp) +
+              ' T80,' + (40 + Math.sin(phase + 3) * amp));
+          } else {
+            line.setAttribute('d', 'M0,' + (60 + Math.sin(phase) * amp) +
+              ' Q14,' + (54 + Math.sin(phase + 1) * amp) +
+              ' 28,' + (60 + Math.sin(phase + 2) * amp) +
+              ' T56,' + (60 + Math.sin(phase + 3) * amp));
+          }
+          requestAnimationFrame(animateOsc);
+        }
+        animateOsc();
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // ARCHITECTURE DIAGRAM SCROLL REVEAL
+  // ═══════════════════════════════════════
+  const archLayers = document.querySelectorAll('.arch-layer');
+  const archConnectors = document.querySelectorAll('.arch-connector');
+  const refractOverlay = document.getElementById('refract-overlay');
+  const archFootnote = document.getElementById('arch-footnote');
+
+  if (window.ScrollTrigger && !prefersReduced) {
+    const archSection = document.getElementById('section-arch');
+
+    // CLIENT layer
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'top 70%',
+      end: 'top 40%',
+      onEnter: function() {
+        gsap.to(archLayers[0], { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+ gsap.to([archConnectors[0], archConnectors[1]], { opacity: 1, duration: 0.4, delay: 0.3 });
+      },
+      once: true
+    });
+
+    // EDGE layer
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'top 50%',
+      end: 'top 30%',
+      onEnter: function() {
+        gsap.to(archLayers[1], { opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to([archConnectors[2], archConnectors[3], archConnectors[4]], { opacity: 1, duration: 0.4, delay: 0.3 });
+      },
+      once: true
+    });
+
+    // APPLICATION layer
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'top 30%',
+      end: 'top 15%',
+      onEnter: function() {
+        gsap.to(archLayers[2], { opacity: 1, scale: 1, duration: 0.7, ease: 'power3.out', transformOrigin: 'center center' });
+        gsap.to(refractOverlay, { opacity: 0.4, duration: 0.7, delay: 0.2 });
+        gsap.to([archConnectors[5], archConnectors[6], archConnectors[7]], { opacity: 1, duration: 0.4, delay: 0.3 });
+      },
+      once: true
+    });
+
+    // DATA layer
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'top 10%',
+      end: 'top 0%',
+      onEnter: function() {
+        gsap.to(archLayers[3], { opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to([archConnectors[8], archConnectors[9], archConnectors[10]], { opacity: 1, duration: 0.4, delay: 0.3 });
+      },
+      once: true
+    });
+
+    // INFRASTRUCTURE layer
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'bottom 120%',
+      end: 'bottom 110%',
+      onEnter: function() {
+        gsap.to(archLayers[4], { opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to([archConnectors[11], archConnectors[12]], { opacity: 1, duration: 0.4, delay: 0.3 });
+      },
+      once: true
+    });
+
+    // OBSERVABILITY layer + footnote
+    ScrollTrigger.create({
+      trigger: archSection,
+      start: 'bottom 105%',
+      end: 'bottom 95%',
+      onEnter: function() {
+        gsap.to(archLayers[5], { opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to(archFootnote, { opacity: 1, duration: 0.5, delay: 0.4 });
+      },
+      once: true
+    });
+  } else if (prefersReduced) {
+    archLayers.forEach(function(l) { l.style.opacity = 1; l.style.transform = 'none'; });
+    archConnectors.forEach(function(c) { c.style.opacity = 1; });
+    if (refractOverlay) refractOverlay.style.opacity = 0.4;
+    if (archFootnote) archFootnote.style.opacity = 1;
+  }
+
+  // ═══════════════════════════════════════
+  // ARCHITECTURE TOOLTIPS + HOVER
+  // ═══════════════════════════════════════
+  const layerDescriptions = {
+    'CLIENT': 'What touches my code last — whatever form the consumer takes',
+    'EDGE': 'Where traffic dies before it becomes a problem',
+    'APPLICATION': 'Where decisions live. The hardest layer to design right.',
+    'DATA': 'PostgreSQL for truth. Redis for speed. Queues for everything that can wait.',
+    'INFRASTRUCTURE': 'Docker on Linux. Not because it’s trendy — because it’s correct.',
+    'OBSERVABILITY': 'The layer that tells you your other layers are lying.'
+  };
+
+  const archTooltip = document.getElementById('arch-tooltip');
+  const archSvg = document.getElementById('arch-diagram');
+  const archWrap = document.getElementById('arch-diagram-wrap');
+
+  archLayers.forEach(function(layer) {
+    const layerName = layer.getAttribute('data-layer');
+
+    function showTooltip() {
+      archTooltip.textContent = layerDescriptions[layerName] || '';
+      archTooltip.classList.add('visible');
+
+      // Position tooltip near the layer
+      const layerRect = layer.getBoundingClientRect();
+      const wrapRect = archWrap.getBoundingClientRect();
+      archTooltip.style.left = (layerRect.left - wrapRect.left + layerRect.width / 2 - 140) + 'px';
+      archTooltip.style.top = (layerRect.top - wrapRect.top - 50) + 'px';
+
+      // Highlight layer, dim others
+      archLayers.forEach(function(other) {
+        if (other !== layer) {
+          other.style.opacity = '0.3';
+        } else {
+          other.style.opacity = '1';
+          const rect = other.querySelector('rect');
+          if (rect) rect.setAttribute('stroke', 'var(--bone)');
+          const texts = other.querySelectorAll('text');
+          if (texts[0]) texts[0].setAttribute('fill', 'var(--bone)');
+        }
+      });
+    }
+
+    function hideTooltip() {
+      archTooltip.classList.remove('visible');
+      archLayers.forEach(function(l) {
+        l.style.opacity = '1';
+        const rect = l.querySelector('rect');
+        if (rect && l.getAttribute('data-layer') !== 'APPLICATION') {
+          rect.setAttribute('stroke', 'var(--seam)');
+        } else if (rect && l.getAttribute('data-layer') === 'APPLICATION') {
+          rect.setAttribute('stroke', 'var(--signal)');
+        }
+        const texts = l.querySelectorAll('text');
+        const isApp = l.getAttribute('data-layer') === 'APPLICATION';
+        const isObs = l.getAttribute('data-layer') === 'OBSERVABILITY';
+        if (texts[0]) texts[0].setAttribute('fill', isApp ? 'var(--bone)' : 'var(--ash)');
+      });
+    }
+
+    layer.addEventListener('mouseenter', showTooltip);
+    layer.addEventListener('mouseleave', hideTooltip);
+    layer.addEventListener('focus', showTooltip);
+    layer.addEventListener('blur', hideTooltip);
+
+    layer.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        showTooltip();
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════
+  // ARCHITECTURE DATA PULSES
+  // ═══════════════════════════════════════
+  const archPulseGroup = document.getElementById('arch-pulses');
+
+  function spawnArchPulse() {
+    if (!archPulseGroup || prefersReduced) return;
+
+    const paths = [
+      // Bottom to top paths
+      [{ x: 300, y: 560 }, { x: 300, y: 520 }, { x: 300, y: 460 }, { x: 300, y: 410 }, { x: 300, y: 350 }, { x: 250, y: 300 }, { x: 250, y: 220 }, { x: 250, y: 180 }, { x: 250, y: 120 }, { x: 300, y: 80 }, { x: 300, y: 20 }],
+      [{ x: 600, y: 560 }, { x: 600, y: 520 }, { x: 600, y: 460 }, { x: 600, y: 410 }, { x: 600, y: 350 }, { x: 650, y: 300 }, { x: 650, y: 220 }, { x: 650, y: 180 }, { x: 650, y: 120 }, { x: 600, y: 80 }, { x: 600, y: 20 }],
+      [{ x: 450, y: 560 }, { x: 450, y: 520 }, { x: 450, y: 460 }, { x: 450, y: 410 }, { x: 450, y: 350 }, { x: 450, y: 300 }, { x: 450, y: 220 }, { x: 450, y: 180 }, { x: 450, y: 120 }, { x: 450, y: 80 }, { x: 450, y: 20 }]
+    ];
+
+    const path = paths[Math.floor(Math.random() * paths.length)];
+
+    // Create SVG circle
+    const ns = 'http://www.w3.org/2000/svg';
+    const circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('r', '3');
+    circle.setAttribute('fill', 'var(--signal)');
+    circle.setAttribute('opacity', '0');
+    archPulseGroup.appendChild(circle);
+
+    const duration = 2;
+    const startTime = performance.now();
+
+    function animatePulse(now) {
+      const elapsed = (now - startTime) / 1000;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Find current position along path
+      const totalSegments = path.length - 1;
+      const currentSegment = Math.floor(progress * totalSegments);
+      const segmentProgress = (progress * totalSegments) - currentSegment;
+
+      if (currentSegment >= totalSegments) {
+        circle.remove();
+        return;
+      }
+
+      const p1 = path[currentSegment];
+      const p2 = path[currentSegment + 1];
+      const x = p1.x + (p2.x - p1.x) * segmentProgress;
+      const y = p1.y + (p2.y - p1.y) * segmentProgress;
+
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', y);
+      circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.9);
+
+      requestAnimationFrame(animatePulse);
+    }
+
+    requestAnimationFrame(animatePulse);
+  }
+
+  if (!prefersReduced) {
+    // Spawn arch pulses periodically
+    setInterval(function() {
+      if (!document.hidden) spawnArchPulse();
+    }, 4000);
+
+    // Initial pulses with delay
+    setTimeout(spawnArchPulse, 1000);
+    setTimeout(spawnArchPulse, 2500);
+  }
+
+  // ═══════════════════════════════════════
+  // PROJECT CHAPTER SCROLL REVEALS
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.project-chapter').forEach(function(chapter) {
+    const left = chapter.querySelector('.chapter-left');
+    const right = chapter.querySelector('.chapter-right');
+
+    if (window.ScrollTrigger && !prefersReduced) {
+      gsap.fromTo(left, {
+        y: 40, opacity: 0
+      }, {
+        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: { trigger: chapter, start: 'top 75%', once: true }
+      });
+      gsap.fromTo(right, {
+        y: 40, opacity: 0
+      }, {
+        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.1,
+        scrollTrigger: { trigger: chapter, start: 'top 75%', once: true }
+      });
+    }
+  });
+
+  // ═══════════════════════════════════════
+  // PROJECT SEPARATOR PULSES
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.project-separator').forEach(function(sep) {
+    const dot = sep.querySelector('.pulse-dot');
+
+    if (window.ScrollTrigger && !prefersReduced && dot) {
+      ScrollTrigger.create({
+        trigger: sep,
+        start: 'top 80%',
+        once: true,
+        onEnter: function() {
+          gsap.fromTo(dot, {
+            left: '0%'
+          }, {
+            left: '100%',
+            duration: 1.2,
+            ease: 'none',
+            onComplete: function() {
+              dot.style.display = 'none';
+            }
+          });
+        }
+      });
+    }
+  });
+
+  // ═══════════════════════════════════════
+  // LAB SECTION SCROLL REVEAL
+  // ═══════════════════════════════════════
+  if (window.ScrollTrigger && !prefersReduced) {
+    gsap.fromTo('#section-lab .lab-statement', {
+      y: 32, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#section-lab', start: 'top 75%', once: true }
+    });
+
+    gsap.fromTo('#homelab-diagram', {
+      y: 40, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0.15,
+      scrollTrigger: { trigger: '#section-lab', start: 'top 65%', once: true }
+    });
+
+    gsap.fromTo('.lab-status-panel', {
+      x: 40, opacity: 0
+    }, {
+      x: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.3,
+      scrollTrigger: { trigger: '#section-lab', start: 'top 65%', once: true }
+    });
+
+    gsap.fromTo('.lab-description', {
+      y: 24, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.4,
+      scrollTrigger: { trigger: '.lab-description', start: 'top 85%', once: true }
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // LAB STATUS DOT PULSING
+  // ═══════════════════════════════════════
+  if (!prefersReduced) {
+    document.querySelectorAll('.status-dot').forEach(function(dot, i) {
+      gsap.to(dot, {
+        opacity: 0.4,
+        duration: 1.5 + i * 0.2,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: i * 0.15
+      });
+    });
+
+    // Lab connector pulses
+    const labPulseGroup = document.getElementById('lab-pulses');
+    const labConnectors = document.querySelectorAll('.lab-connector');
+    const labPaths = [
+      [{ x: 100, y: 86 }, { x: 100, y: 130 }],
+      [{ x: 300, y: 86 }, { x: 300, y: 130 }],
+      [{ x: 500, y: 86 }, { x: 500, y: 130 }],
+      [{ x: 100, y: 228 }, { x: 100, y: 280 }],
+      [{ x: 300, y: 228 }, { x: 300, y: 280 }],
+      [{ x: 500, y: 228 }, { x: 500, y: 280 }]
+    ];
+
+    function spawnLabPulse() {
+      if (!labPulseGroup || prefersReduced) return;
+      const path = labPaths[Math.floor(Math.random() * labPaths.length)];
+      const ns = 'http://www.w3.org/2000/svg';
+      const circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('r', '2.5');
+      circle.setAttribute('fill', 'var(--signal)');
+      circle.setAttribute('opacity', '0');
+      labPulseGroup.appendChild(circle);
+
+      const duration = 1.2;
+      const startTime = performance.now();
+
+      function animateLabPulse(now) {
+        const elapsed = (now - startTime) / 1000;
+        const progress = Math.min(elapsed / duration, 1);
+        const p1 = path[0];
+        const p2 = path[1];
+        const x = p1.x + (p2.x - p1.x) * progress;
+        const y = p1.y + (p2.y - p1.y) * progress;
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.8);
+        if (progress >= 1) {
+          circle.remove();
+          return;
+        }
+        requestAnimationFrame(animateLabPulse);
+      }
+      requestAnimationFrame(animateLabPulse);
+    }
+
+    setInterval(function() {
+      if (!document.hidden) spawnLabPulse();
+    }, 5000 + Math.random() * 3000);
+  }
+
+  // ═══════════════════════════════════════
+  // PRINCIPLES SCROLL REVEAL
+  // ═══════════════════════════════════════
+  document.querySelectorAll('.principle').forEach(function(p, i) {
+    if (window.ScrollTrigger && !prefersReduced) {
+      gsap.fromTo(p, {
+        y: 24, opacity: 0
+      }, {
+        y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: i * 0.12,
+        scrollTrigger: { trigger: p, start: 'top 80%', once: true }
+      });
+    }
+  });
+
+  // ═══════════════════════════════════════
+  // CONNECT SECTION SCROLL REVEAL
+  // ═══════════════════════════════════════
+  if (window.ScrollTrigger && !prefersReduced) {
+    gsap.fromTo('#section-connect .connect-statement', {
+      y: 40, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: '#section-connect', start: 'top 75%', once: true }
+    });
+
+    gsap.fromTo('#section-connect .connect-support', {
+      y: 24, opacity: 0
+    }, {
+      y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.15,
+      scrollTrigger: { trigger: '#section-connect', start: 'top 75%', once: true }
+    });
+
+    gsap.fromTo('.connect-link-row', {
+      x: -20, opacity: 0
+    }, {
+      x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', stagger: 0.08, delay: 0.3,
+      scrollTrigger: { trigger: '.connect-links', start: 'top 85%', once: true }
+    });
+
+    gsap.fromTo('.connect-footer', {
+      opacity: 0
+    }, {
+      opacity: 1, duration: 0.5, delay: 0.6,
+      scrollTrigger: { trigger: '.connect-links', start: 'top 85%', once: true }
+    });
+
+    // Grid converge effect
+    ScrollTrigger.create({
+      trigger: '#section-connect',
+      start: 'top 70%',
+      end: 'bottom 100%',
+      onEnter: function() {
+        gsap.to('#signal-grid', { opacity: 0.12, duration: 1.5, ease: 'power2.inOut' });
+      },
+      onLeave: function() {
+        gsap.to('#signal-grid', { opacity: isMobile ? 0.04 : 0.06, duration: 1, ease: 'power2.inOut' });
+      },
+      onEnterBack: function() {
+        gsap.to('#signal-grid', { opacity: 0.12, duration: 1.5, ease: 'power2.inOut' });
+      },
+      onLeaveBack: function() {
+        gsap.to('#signal-grid', { opacity: isMobile ? 0.04 : 0.06, duration: 1, ease: 'power2.inOut' });
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════
+  // SIGNAL PULSE ON RANDOM LINES
+  // ═══════════════════════════════════════
+  // Create signal lines that occasionally pulse across the page
+  if (!prefersReduced) {
+    function signalPulse() {
+      // Find random connector lines in arch diagram
+      const connectors = document.querySelectorAll('.arch-connector');
+      if (connectors.length > 0) {
+        const connector = connectors[Math.floor(Math.random() * connectors.length)];
+        const x1 = parseFloat(connector.getAttribute('x1'));
+        const y1 = parseFloat(connector.getAttribute('y1'));
+        const x2 = parseFloat(connector.getAttribute('x2'));
+        const y2 = parseFloat(connector.getAttribute('y2'));
+
+        const archPulses = document.getElementById('arch-pulses');
+        if (archPulses) {
+          const ns = 'http://www.w3.org/2000/svg';
+          const circle = document.createElementNS(ns, 'circle');
+          circle.setAttribute('r', '2');
+          circle.setAttribute('fill', 'var(--signal)');
+          circle.setAttribute('opacity', '0');
+          archPulses.appendChild(circle);
+
+          const duration = 0.8;
+          const startTime = performance.now();
+
+          function animPulse(now) {
+            const elapsed = (now - startTime) / 1000;
+            const progress = Math.min(elapsed / duration, 1);
+            const x = x1 + (x2 - x1) * progress;
+            const y = y1 + (y2 - y1) * progress;
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.7);
+            if (progress >= 1) {
+              circle.remove();
+              return;
+            }
+            requestAnimationFrame(animPulse);
+          }
+          requestAnimationFrame(animPulse);
+        }
+      }
+    }
+
+    setInterval(function() {
+      if (!document.hidden) signalPulse();
+    }, 6000 + Math.random() * 2000);
+  }
+
+  // ═══════════════════════════════════════
+  // REFRESH SCROLLTRIGGER AFTER LOAD
+  // ═══════════════════════════════════════
+  window.addEventListener('load', function() {
+    if (window.ScrollTrigger) {
+      ScrollTrigger.refresh();
+    }
+  });
+
+  // Also refresh on font load
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function() {
+      if (window.ScrollTrigger) {
+        ScrollTrigger.refresh();
+      }
+    });
+  }
+
+})();
+</script>
+
 </body>
 </html>
