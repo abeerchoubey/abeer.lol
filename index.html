@@ -1,2241 +1,989 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Abeer Choubey — Backend Engineer & Systems Architect. The invisible layer, made deliberately.">
-<title>Abeer Choubey · Backend Engineer & Systems Architect</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-
-<style>
-:root {
-  --void:    #060608;
-  --chamber: #0D0D12;
-  --shell:   #141419;
-  --seam:    #1E1E28;
-  --muted:   #565668;
-  --ash:     #9898AA;
-  --bone:    #F0ECE6;
-  --signal:  #C8F564;
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-sans: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-*::before, *::after { box-sizing: border-box; }
-
-html {
-  background: var(--void);
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-sans);
-  color: var(--bone);
-  background: var(--void);
-  cursor: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-::selection { background: var(--signal); color: var(--void); }
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: var(--seam); border-radius: 2px; }
-::-moz-scrollbar { width: 4px; }
-::-moz-scrollbar-track { background: var(--void); }
-::-moz-scrollbar-thumb { background: var(--seam); border-radius: 2px; }
-
-a { color: inherit; text-decoration: none; }
-
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--shell);
-  color: var(--signal);
-  padding: 8px 16px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  z-index: 10000;
-  border: 1px solid var(--signal);
-  border-radius: 4px;
-  transition: top 0.2s;
-}
-.skip-link:focus { top: 8px; }
-
-/* ═══ ARCH GRID ═══ */
-#arch-grid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-  background-image: 
-    linear-gradient(to right, rgba(240, 236, 230, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(240, 236, 230, 0.025) 1px, transparent 1px);
-  background-size: 40px 40px;
-  -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 30%, transparent 90%);
-  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, #000 30%, transparent 90%);
-}
-
-/* ═══ CURSOR ═══ */
-#cursor-dot {
-  position: fixed;
-  width: 4px;
-  height: 4px;
-  background: var(--bone);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  top: 0;
-  left: 0;
-  will-change: transform;
-}
-
-#cursor-ring {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 0.5px solid var(--seam);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  top: 0;
-  left: 0;
-  transition: width 0.3s var(--ease-spring),
-              height 0.3s var(--ease-spring),
-              border-color 0.2s ease,
-              background 0.2s ease;
-  will-change: transform, width, height;
-}
-
-#cursor-ring.crosshair-mode {
-  width: 16px;
-  height: 16px;
-  border-color: var(--bone);
-  border-radius: 0;
-  border-top: 0.5px solid transparent;
-  border-bottom: 0.5px solid transparent;
-}
-
-#cursor-ring.cta-mode {
-  background: var(--signal);
-  border-color: var(--signal);
-  width: 28px;
-  height: 28px;
-}
-
-#cursor-ring.link-mode {
-  width: 36px;
-  height: 36px;
-  border-color: var(--signal);
-  background: rgba(200, 245, 100, 0.06);
-}
-
-/* ═══ SIGNAL GRID ═══ */
-#signal-grid {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 2s ease;
-}
-
-/* ═══ NAVIGATION ═══ */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 24px 48px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  pointer-events: none;
-}
-
-nav > * { pointer-events: auto; }
-
-nav .nav-brand {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-}
-
-nav .nav-links {
-  display: flex;
-  gap: 32px;
-}
-
-nav .nav-links a {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: color 0.2s ease;
-  position: relative;
-}
-
-nav .nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--signal);
-  transition: width 0.3s var(--ease-spring);
-}
-
-nav .nav-links a:hover {
-  color: var(--bone);
-}
-
-nav .nav-links a:hover::after {
-  width: 100%;
-}
-
-/* ═══ SECTION SHARED ═══ */
-.section-label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--signal);
-  margin-bottom: 24px;
-}
-
-.section-label .label-line {
-  display: inline-block;
-  width: 40px;
-  height: 0.5px;
-  background: var(--signal);
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  color: var(--bone);
-  margin-bottom: 64px;
-  line-height: 1.2;
-}
-
-/* ═══ HERO ═══ */
-#section-hero {
-  height: 100vh;
-  padding: 0 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-}
-
-#section-hero .hero-name {
-  font-family: var(--font-display);
-  font-size: clamp(52px, 8vw, 96px);
-  font-weight: 400;
-  color: var(--bone);
-  line-height: 1.05;
-  margin-bottom: 20px;
-}
-
-#section-hero .hero-name .char {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-#section-hero .hero-name .char.space { width: 0.3em; }
-
-#section-hero .hero-descriptor {
-  font-family: var(--font-sans);
-  font-size: 17px;
-  font-weight: 300;
-  color: var(--ash);
-  margin-bottom: 12px;
-  opacity: 0;
-}
-
-#section-hero .hero-location {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-  opacity: 0;
-}
-
-#section-hero .scroll-hint {
-  position: absolute;
-  bottom: 32px;
-  right: 48px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--muted);
-  opacity: 0;
-}
-
-/* ═══ SIGNAL ═══ */
-#section-signal {
-  min-height: 100vh;
-  padding: 140px 80px;
-  background: linear-gradient(to bottom, var(--void), var(--chamber));
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-#section-signal .signal-statement {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 5vw, 72px);
-  font-weight: 400;
-  color: var(--bone);
-  line-height: 1.2;
-  max-width: 840px;
-  margin-bottom: 48px;
-}
-
-#section-signal .signal-support {
-  font-family: var(--font-sans);
-  font-size: 17px;
-  font-weight: 400;
-  color: var(--ash);
-  max-width: 520px;
-  line-height: 1.75;
-}
-
-#section-signal .oscilloscope {
-  position: absolute;
-  right: 80px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-#section-signal .oscilloscope svg {
-  display: block;
-}
-
-/* ═══ ARCHITECTURE ═══ */
-#section-arch {
-  min-height: 200vh;
-  background: var(--chamber);
-  position: relative;
-  z-index: 1;
-}
-
-#section-arch .arch-inner {
-  padding: 120px 80px;
-}
-
-.arch-header {
-  position: relative;
-  margin-bottom: 80px;
-}
-
-#arch-diagram-wrap {
-  position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-#arch-diagram {
-  width: 100%;
-  display: block;
-}
-
-.arch-tooltip {
-  position: absolute;
-  background: var(--shell);
-  border: 0.5px solid var(--seam);
-  border-radius: 4px;
-  padding: 12px 16px;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  max-width: 280px;
-  z-index: 50;
-  color: var(--ash);
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.2s ease, transform 0.2s var(--ease-spring);
-  line-height: 1.5;
-}
-
-.arch-tooltip.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.arch-footnote {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 40px;
-  opacity: 0;
-  text-align: center;
-}
-
-/* ═══ WORK ═══ */
-#section-work {
-  background: linear-gradient(to bottom, var(--chamber), var(--void));
-  position: relative;
-  z-index: 1;
-  padding: 120px 0 0 0;
-}
-
-.work-label-wrap {
-  padding: 0 80px;
-  margin-bottom: 0;
-}
-
-.project-chapter {
-  padding: 80px;
-  border-top: 0.5px solid var(--seam);
-  position: relative;
-}
-
-.project-chapter .chapter-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
-}
-
-.project-chapter .chapter-number {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 16px;
-}
-
-.project-chapter .project-name {
-  font-family: var(--font-sans);
-  font-size: 40px;
-  font-weight: 300;
-  color: var(--bone);
-  margin-bottom: 8px;
-}
-
-.project-chapter .project-descriptor {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  color: var(--signal);
-  margin-bottom: 24px;
-}
-
-.project-chapter .project-description {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ash);
-  max-width: 440px;
-  margin-bottom: 32px;
-}
-
-.project-chapter .mini-arch {
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 24px;
-  display: block;
-}
-
-.project-chapter .project-link {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ash);
-  transition: color 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.project-chapter .project-link:hover { color: var(--signal); }
-
-.project-chapter .system-detail {
-  background: var(--shell);
-  border: 0.5px solid var(--seam);
-  border-radius: 4px;
-  padding: 28px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ash);
-  line-height: 1.8;
-  overflow-x: auto;
-  white-space: pre;
-}
-
-.system-detail .sd-comment { color: var(--muted); }
-.system-detail .sd-keyword { color: var(--signal); }
-.system-detail .sd-string { color: var(--ash); }
-.system-detail .sd-type { color: var(--bone); }
-
-.project-separator {
-  width: 100%;
-  height: 0.5px;
-  background: var(--seam);
-  position: relative;
-  overflow: hidden;
-}
-
-.project-separator .pulse-dot {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 4px;
-  height: 4px;
-  background: var(--signal);
-  border-radius: 50%;
-  transform: translateY(-50%);
-  box-shadow: 0 0 8px var(--signal);
-}
-
-/* ═══ LAB ═══ */
-#section-lab {
-  background: var(--void);
-  padding: 140px 80px;
-  min-height: 100vh;
-  position: relative;
-  z-index: 1;
-}
-
-#section-lab .lab-statement {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 5vw, 64px);
-  font-weight: 400;
-  color: var(--bone);
-  max-width: 760px;
-  line-height: 1.2;
-  margin-bottom: 64px;
-}
-
-.lab-diagram-container {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.lab-diagram-container #homelab-diagram {
-  flex: 1;
-  min-width: 0;
-  max-width: 860px;
-}
-
-.lab-status-panel {
-  width: 200px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ash);
-  line-height: 2.2;
-  flex-shrink: 0;
-  background: var(--shell);
-  border: 0.5px solid var(--seam);
-  border-radius: 4px;
-  padding: 20px;
-}
-
-.lab-status-panel .status-label { color: var(--muted); }
-.lab-status-panel .status-value { color: var(--signal); }
-
-.lab-description {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  color: var(--ash);
-  max-width: 540px;
-  line-height: 1.75;
-  margin-top: 48px;
-}
-
-/* ═══ PRINCIPLES ═══ */
-#section-principles {
-  background: linear-gradient(to bottom, var(--void), var(--chamber));
-  padding: 140px 80px;
-  min-height: 80vh;
-  position: relative;
-  z-index: 1;
-}
-
-.principle {
-  padding-bottom: 64px;
-  border-bottom: 0.5px solid var(--seam);
-  margin-bottom: 64px;
-}
-
-.principle:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.principle .principle-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 16px;
-}
-
-.principle .principle-text {
-  font-family: var(--font-sans);
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 300;
-  color: var(--bone);
-  max-width: 640px;
-  line-height: 1.4;
-}
-
-/* ═══ CONNECT ═══ */
-#section-connect {
-  background: var(--void);
-  padding: 140px 80px;
-  min-height: 90vh;
-  position: relative;
-  z-index: 1;
-}
-
-#section-connect .connect-statement {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 7vw, 88px);
-  font-weight: 400;
-  color: var(--bone);
-  line-height: 1.1;
-  margin-bottom: 32px;
-}
-
-#section-connect .connect-support {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  color: var(--ash);
-  max-width: 480px;
-  line-height: 1.7;
-  margin-bottom: 80px;
-}
-
-.connect-links { max-width: 720px; }
-
-.connect-link-row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 20px 0;
-  border-bottom: 0.5px solid var(--seam);
-  position: relative;
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.connect-link-row::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--shell);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: -1;
-}
-
-.connect-link-row:hover {
-  border-bottom-color: var(--signal);
-}
-
-.connect-link-row:hover::before { opacity: 1; }
-
-.connect-link-row .cl-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  width: 80px;
-  flex-shrink: 0;
-}
-
-.connect-link-row .cl-text {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  color: var(--ash);
-  transition: color 0.2s ease;
-  flex: 1;
-}
-
-.connect-link-row:hover .cl-text { color: var(--bone); }
-
-.connect-link-row .cl-arrow {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  color: var(--muted);
-  display: inline-block;
-  transition: transform 0.2s var(--ease-spring), color 0.2s ease;
-  transform-origin: left center;
-}
-
-.connect-link-row:hover .cl-arrow {
-  transform: translateX(8px);
-  color: var(--signal);
-}
-
-.connect-footer {
-  margin-top: 100px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-}
-
-/* ═══ FOCUS / ACCESSIBILITY ═══ */
-*:focus-visible {
-  outline: 1.5px solid var(--signal);
-  outline-offset: 2px;
-}
-
-/* ═══ MOBILE ═══ */
-@media (max-width: 768px) {
-  body { cursor: auto; }
-  #cursor-dot, #cursor-ring { display: none !important; }
-
-  nav { padding: 20px 24px; }
-  nav .nav-links { gap: 20px; }
-  nav .nav-links a { font-size: 10px; }
-
-  #section-hero { padding: 0 32px; }
-  #section-hero .hero-name { font-size: clamp(40px, 10vw, 56px); }
-  #section-hero .scroll-hint { right: 24px; bottom: 24px; }
-
-  #section-signal { padding: 80px 32px; }
-  #section-signal .signal-statement { font-size: clamp(28px, 7vw, 42px); }
-  #section-signal .oscilloscope { display: none; }
-
-  #section-arch { min-height: 150vh; }
-  #section-arch .arch-inner { padding: 80px 32px; }
-  #arch-diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  #arch-diagram { min-width: 760px; }
-
-  #section-work { padding: 80px 0 0 0; }
-  .work-label-wrap { padding: 0 32px; }
-  .project-chapter { padding: 60px 32px; }
-  .project-chapter .chapter-grid { grid-template-columns: 1fr; gap: 32px; }
-  .project-chapter .project-name { font-size: 32px; }
-  .project-chapter .system-detail { margin-top: 0; }
-
-  #section-lab { padding: 80px 32px; }
-  .lab-diagram-container { flex-direction: column; }
-  .lab-diagram-container #homelab-diagram-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abeer Choubey — Systems, made tangible</title>
+  <meta name="description" content="Abeer Choubey builds backend systems, infrastructure, automation, and AI products.">
+  
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Abeer Choubey — Systems, made tangible">
+  <meta property="og:description" content="Abeer Choubey builds backend systems, infrastructure, automation, and AI products.">
+  <meta property="og:type" content="website">
+  <meta property="og:email" content="sentinel.loqs@proton.me">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Abeer Choubey — Systems, made tangible">
+  <meta name="twitter:description" content="Abeer Choubey builds backend systems, infrastructure, automation, and AI products.">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Abeer Choubey",
+    "jobTitle": "Software Engineer / Independent Builder",
+    "email": "sentinel.loqs@proton.me",
+    "sameAs": [
+      "https://github.com/veyloxgit",
+      "https://www.linkedin.com/in/abeerchoubey",
+      "https://discord.gg/PRA8W7eDB5",
+      "https://discord.gg/XjBJnr4wRz"
+    ],
+    "knowsAbout": ["Backend Systems", "Infrastructure", "Automation", "AI Orchestration", "Go", "TypeScript", "PostgreSQL"]
   }
-  .lab-diagram-container #homelab-diagram { min-width: 760px; }
-  .lab-status-panel { width: 100%; }
+  </script>
 
-  #section-principles { padding: 80px 32px; }
-  .principle .principle-text { font-size: clamp(18px, 5vw, 26px); }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 
-  #section-connect { padding: 80px 32px; }
-  #section-connect .connect-statement { font-size: clamp(32px, 8vw, 52px); }
-  .connect-link-row { gap: 12px; }
-  .connect-link-row .cl-label { width: 64px; }
- .connect-footer { margin-top: 60px; }
-}
+  <!-- GSAP & Lenis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  #signal-grid { opacity: 0.04 !important; }
-}
-</style>
+  <style>
+    :root {
+      --ink: #e9e7df;
+      --muted: #a7a49c;
+      --line: rgba(233, 231, 223, 0.16);
+      --bg: #11110f;
+      --paper: #e9e7df;
+      --orange: #df6844;
+      --font-manrope: 'Manrope', Arial, sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-manrope);
+      font-size: 14px;
+      cursor: none;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Custom Cursor */
+    .cursor {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+
+    /* Preloader Intro */
+    .intro {
+      z-index: 300;
+      position: fixed;
+      inset: 0;
+      background: #151513;
+      display: grid;
+      place-items: center;
+      color: #e9e7df;
+      gap: 8px;
+      transition: opacity 0.45s ease;
+    }
+    .intro span { font: 400 7vw var(--font-serif); line-height: 0.5; }
+    .intro em { font: 10px var(--font-mono); letter-spacing: 0.18em; text-transform: uppercase; }
+
+    /* Navigation Header */
+    .p-nav {
+      position: fixed;
+      z-index: 100;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 84px;
+      padding: 0 4vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      mix-blend-mode: difference;
+      color: #fff;
+    }
+    .monogram { font: 500 21px var(--font-mono); letter-spacing: -0.15em; }
+    .monogram span { color: #e57051; }
+    .p-nav nav { display: flex; gap: 26px; font: 11px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+    .p-nav nav a { position: relative; }
+    .p-nav nav a:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.35s;
+    }
+    .p-nav nav a:hover:after { transform: scaleX(1); transform-origin: left; }
+    .menu-button, .mobile-menu { display: none; }
+
+    .portfolio-main { overflow: hidden; }
+
+    /* Hero Section */
+    .p-hero {
+      min-height: 100vh;
+      position: relative;
+      padding: 26vh 4vw 5vh;
+      background: #dad8d0;
+      color: #161614;
+    }
+    .hero-meta {
+      position: absolute;
+      top: calc(84px + 4vh);
+      left: 4vw;
+      right: 4vw;
+      display: flex;
+      justify-content: space-between;
+      font: 10px var(--font-mono);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+    .hero-statement { position: relative; z-index: 2; }
+    .eyebrow {
+      font: 10px var(--font-mono);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+    .p-hero .eyebrow { color: #56554f; }
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #d65e40;
+      box-shadow: 0 0 0 4px #d65e4030;
+      margin: 0 4px;
+    }
+    .p-hero h1, .p-intro h2, .p-capabilities h2, .p-lab h2, .p-contact h2 {
+      font: 400 clamp(62px, 10.4vw, 168px) / 0.84 var(--font-serif);
+      letter-spacing: -0.055em;
+      margin: 0;
+    }
+    .p-hero h1 em, .p-intro h2 em, .p-capabilities h2 em, .p-lab h2 em, .p-contact h2 em {
+      font-weight: 400;
+      color: #c85639;
+      font-style: italic;
+    }
+    .hero-note { font-size: 13px; line-height: 1.6; margin: 30px 0 0 31%; color: #46453f; }
+    
+    /* GSAP Animated 3D Hero Glyph */
+    .hero-glyph {
+      position: absolute;
+      right: 8vw;
+      top: 20%;
+      width: min(31vw, 460px);
+      aspect-ratio: 1;
+      transform: rotate(-12deg);
+      opacity: 0.92;
+      perspective: 800px;
+      transform-style: preserve-3d;
+    }
+    .hero-glyph i, .hero-glyph b {
+      position: absolute;
+      display: block;
+      border: 1px solid #161614;
+      border-radius: 50%;
+    }
+    .hero-glyph i:nth-child(1) { inset: 0; }
+    .hero-glyph i:nth-child(2) { inset: 15%; }
+    .hero-glyph i:nth-child(3) { inset: 31%; }
+    .hero-glyph b {
+      width: 19%;
+      aspect-ratio: 1;
+      background: #e2704f;
+      left: 40%;
+      top: 40%;
+      box-shadow: 0 0 0 13px #e2704f40;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 5vh;
+      right: 4vw;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      font: 10px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Intro Section */
+    .p-intro {
+      padding: 20vh 12vw 19vh;
+      display: grid;
+      grid-template-columns: 1fr 270px;
+      gap: 8vw;
+      background: #161614;
+    }
+    .p-intro h2, .p-capabilities h2, .p-lab h2, .p-contact h2 {
+      font-size: clamp(42px, 6.3vw, 98px);
+      line-height: 0.92;
+    }
+    .intro-aside { align-self: end; color: #bbb8ae; font-size: 15px; line-height: 1.65; }
+    .inline-link {
+      margin-top: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #e5e2d9;
+      font: 11px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid #777;
+      padding-bottom: 7px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .inline-link:hover { color: #ffffff; border-color: #ffffff; }
+
+    /* Work Section */
+    .p-work { background: #e6e4dc; color: #1b1b18; padding: 11vh 4vw 14vh; }
+    .section-rule {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #b8b6ad;
+      padding-top: 12px;
+      font: 10px var(--font-mono);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #55554f;
+    }
+    .project-list { margin-top: 8vh; }
+    .project-row {
+      display: grid;
+      grid-template-columns: 7% 32% 1fr 8% 32px;
+      gap: 2vw;
+      align-items: center;
+      padding: 28px 0;
+      border-bottom: 1px solid #c7c5bd;
+      transition: padding 0.45s, color 0.3s;
+      cursor: pointer;
+    }
+    .project-row:hover { padding: 28px 1.3vw; }
+    .project-no, .project-year { font: 10px var(--font-mono); letter-spacing: 0.08em; }
+    .project-title h3 { font: 400 clamp(38px, 4.8vw, 72px) / 0.9 var(--font-serif); letter-spacing: -0.04em; margin: 0; }
+    .project-title p { margin: 7px 0 0; font: 10px var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: #666; }
+    .project-description { max-width: 310px; line-height: 1.45; color: #5d5c56; margin: 0; }
+    .project-arrow {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #333;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      transition: transform 0.4s, background 0.4s, color 0.4s;
+    }
+    .project-row:hover .project-arrow { transform: rotate(45deg); background: #1a1a18; color: white; }
+    .project-row.violet:hover { color: #653a92; }
+    .project-row.rust:hover { color: #bd573d; }
+    .project-row.lime:hover { color: #668e34; }
+    .project-row.blue:hover { color: #365f92; }
+
+    /* Marquee */
+    .p-marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      background: #da6748;
+      color: #181715;
+      padding: 20px 0;
+      font: 400 clamp(27px, 4vw, 56px) / 1 var(--font-serif);
+      letter-spacing: -0.04em;
+    }
+    .p-marquee div { display: inline-block; animation: marquee 21s linear infinite; }
+    .p-marquee span { font: 20px var(--font-mono); vertical-align: middle; margin: 0 17px; }
+    @keyframes marquee { to { transform: translateX(-35%); } }
+
+    /* Capabilities */
+    .p-capabilities {
+      padding: 17vh 12vw;
+      background: #20201d;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 9vw;
+    }
+    .cap-list { border-top: 1px solid #52514b; }
+    .cap-list article {
+      display: grid;
+      grid-template-columns: 48px 1fr 1.1fr;
+      gap: 15px;
+      padding: 24px 0;
+      border-bottom: 1px solid #52514b;
+    }
+    .cap-list span { font: 10px var(--font-mono); color: #aaa69e; }
+    .cap-list h3 { margin: 0; font-size: 15px; font-weight: 500; }
+    .cap-list p { margin: 0; color: #aaa69e; line-height: 1.55; font-size: 13px; }
+
+    /* Lab / Terminal */
+    .p-lab {
+      background: #c6d38a;
+      color: #171913;
+      padding: 13vh 12vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9vw;
+      align-items: center;
+    }
+    .p-lab .eyebrow { color: #4a5036; }
+    .p-lab h2 em { color: #3c623d; }
+    .lab-copy > p:last-child { max-width: 360px; color: #3f4935; line-height: 1.6; margin: 28px 0 0; }
+    .lab-visual {
+      position: relative;
+      min-height: 370px;
+      background: #aebd6e;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .lab-visual > svg { position: absolute; right: 21px; bottom: 20px; color: #71804a; }
+    .terminal {
+      width: 75%;
+      padding: 15px;
+      background: #141712;
+      color: #dce5c0;
+      box-shadow: 15px 15px 0 #899657;
+      font: 10px / 1.8 var(--font-mono);
+    }
+    .terminal > div { display: flex; gap: 5px; margin-bottom: 20px; }
+    .terminal i { width: 6px; height: 6px; border-radius: 50%; background: #7a8656; }
+    .terminal p { margin: 0; }
+    .terminal p span { color: #a6ca6a; }
+    .terminal b { font-weight: 400; color: #e1b276; }
+
+    /* Contact Section */
+    .p-contact {
+      min-height: 76vh;
+      padding: 13vh 12vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #171715;
+    }
+    .p-contact > div > p:last-child { color: #aaa69e; margin-top: 30px; line-height: 1.6; }
+    .p-contact > div > p:last-child a { color: #e8e5de; border-bottom: 1px solid #777; transition: border-color 0.3s; }
+    .p-contact > div > p:last-child a:hover { border-color: #ffffff; }
+    .contact-orb {
+      width: 190px;
+      aspect-ratio: 1;
+      border: 1px solid #d87050;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.35;
+      color: #ef8565;
+      transition: background 0.5s, color 0.5s;
+    }
+    .contact-orb svg { margin-left: 8px; }
+    .contact-orb:hover { background: #e36f4f; color: #171715; }
+
+    /* Footer */
+    .p-footer {
+      padding: 20px 4vw;
+      border-top: 1px solid #33332e;
+      display: flex;
+      justify-content: space-between;
+      color: #8f8c84;
+      font: 10px var(--font-mono);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .p-footer a { display: inline-flex; gap: 5px; align-items: center; transition: color 0.3s; }
+    .p-footer a:hover { color: #ffffff; }
+
+    /* Reveal Animation Class */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Project Detail Modal Overlay */
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: #e6e4dc;
+      color: #191916;
+      overflow-y: auto;
+      display: none;
+      padding: 130px 9vw 7vh;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .project-modal.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 10px var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: border-color 0.3s;
+    }
+    .back-link:hover { border-color: currentColor; }
+    .project-hero { position: relative; min-height: 61vh; padding-top: 16vh; }
+    .project-hero h1 { font: 400 clamp(80px, 16vw, 240px) / 0.75 var(--font-serif); letter-spacing: -0.07em; margin: 0; }
+    .project-hero > p:not(.eyebrow) { max-width: 330px; line-height: 1.55; margin: 45px 0 0 35%; color: #53524d; }
+    .project-shape { position: absolute; right: 1%; top: 18%; width: 28vw; aspect-ratio: 1; }
+    .project-shape span { position: absolute; border: 1px solid currentColor; border-radius: 50%; }
+    .project-shape span:nth-child(1) { inset: 0; }
+    .project-shape span:nth-child(2) { inset: 19%; }
+    .project-shape span:nth-child(3) { inset: 38%; background: currentColor; }
+    .violet .project-shape { color: #73479e; }
+    .rust .project-shape { color: #c86247; }
+    .lime .project-shape { color: #6d943f; }
+    .blue .project-shape { color: #416e9d; }
+    .project-detail { border-top: 1px solid #b8b6ad; padding: 25px 0 14vh; display: grid; grid-template-columns: 1fr 1.4fr; }
+    .project-note { font: 400 clamp(30px, 4vw, 57px) / 1.05 var(--font-serif); margin: 0; max-width: 660px; }
+    .project-tags { grid-column: 2; display: flex; gap: 7px; margin-top: 28px; flex-wrap: wrap; }
+    .project-tags span { padding: 7px 10px; border: 1px solid #aaa8a0; border-radius: 30px; font: 10px var(--font-mono); text-transform: uppercase; }
+    .project-next { border-top: 1px solid #b8b6ad; padding-top: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .project-next p { font: 10px var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
+    .project-next a { font: 400 clamp(40px, 6vw, 88px) / 0.8 var(--font-serif); display: flex; gap: 10px; align-items: center; cursor: pointer; }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      body { cursor: auto; }
+      .cursor { display: none; }
+      .p-nav { height: 65px; }
+      .p-nav nav { display: none; }
+      .menu-button { display: block; background: transparent; border: 0; color: inherit; padding: 5px; cursor: pointer; }
+      .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 64px);
+        background: #171715;
+        color: #e8e5dd;
+        flex-direction: column;
+        padding: 12vh 8vw;
+        gap: 26px;
+        font: 400 47px / 1 var(--font-serif);
+        mix-blend-mode: normal;
+      }
+      .mobile-menu.active { display: flex; }
+      .p-hero { padding: 25vh 6vw 5vh; }
+      .hero-meta { left: 6vw; right: 6vw; top: 92px; }
+      .hero-meta span:last-child { display: none; }
+      .p-hero h1 { font-size: 22vw; }
+      .hero-note { margin-left: 0; }
+      .hero-glyph { width: 61vw; right: -7vw; top: 48%; }
+      .p-intro, .p-capabilities, .p-lab { padding: 13vh 6vw; display: block; }
+      .p-intro { min-height: auto; }
+      .intro-aside { margin-top: 65px; }
+      .project-row { grid-template-columns: 12% 1fr 27px; gap: 7px; padding: 21px 0; }
+      .project-row:hover { padding: 21px 0; }
+      .project-description, .project-year { display: none; }
+      .project-title h3 { font-size: 12vw; }
+      .p-work { padding: 10vh 6vw; }
+      .section-rule span:last-child { display: none; }
+      .p-capabilities h2 { margin-bottom: 55px; }
+      .cap-list article { grid-template-columns: 32px 1fr; padding: 22px 0; }
+      .cap-list p { grid-column: 2; }
+      .p-lab { padding-bottom: 0; display: flex; flex-direction: column; }
+      .lab-visual { min-height: 280px; margin: 55px -6vw 0; order: 2; width: calc(100% + 12vw); }
+      .lab-copy { order: 1; }
+      .p-contact { padding: 13vh 6vw; min-height: 78vh; display: block; }
+      .contact-orb { width: 155px; margin-top: 54px; }
+      .p-footer { padding: 18px 6vw; gap: 9px; flex-wrap: wrap; }
+      .p-footer span:nth-child(2) { display: none; }
+      .project-modal { padding: 100px 6vw 6vh; }
+      .project-hero { min-height: 60vh; padding-top: 14vh; }
+      .project-hero h1 { font-size: 24vw; }
+      .project-hero > p:not(.eyebrow) { margin: 35px 0 0; max-width: 270px; }
+      .project-shape { width: 48vw; top: 40%; right: -7vw; opacity: 0.65; }
+      .project-detail { grid-template-columns: 1fr; padding-bottom: 11vh; }
+      .project-note { font-size: 11vw; margin-top: 26px; }
+      .project-tags { grid-column: auto; flex-wrap: wrap; }
+      .project-next a { font-size: 16vw; }
+    }
+  </style>
 </head>
-<body>
+<body id="top">
 
-<!-- ═══ ARCH GRID ═══ -->
-<div id="arch-grid"></div>
-
-<a href="#section-hero" class="skip-link">Skip to content</a>
-
-<!-- ═══ CURSOR ═══ -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
-<!-- ═══ SIGNAL GRID ═══ -->
-<canvas id="signal-grid"></canvas>
-
-<!-- ═══ NAV ═══ -->
-<nav>
-  <div class="nav-brand">AC</div>
-  <div class="nav-links">
-    <a href="#section-work" data-cursor="link" aria-label="Jump to work section">[work]</a>
-    <a href="#section-lab" data-cursor="link" aria-label="Jump to homelab section">[lab]</a>
-    <a href="#section-connect" data-cursor="link" aria-label="Jump to connect section">[connect]</a>
+  <!-- Preloader -->
+  <div class="intro" id="preloader">
+    <span>AC</span>
+    <em>Loading the workspace</em>
   </div>
-</nav>
 
-<!-- ═══ HERO ═══ -->
-<section id="section-hero" aria-label="Introduction">
-  <h1 class="hero-name" id="hero-name">Abeer Choubey</h1>
-  <p class="hero-descriptor" id="hero-descriptor">Backend Engineer · Systems Architect</p>
-  <p class="hero-location" id="hero-location">// Based in India.&nbsp;&nbsp;·&nbsp;&nbsp;Available for opportunities</p>
-  <span class="scroll-hint" id="scroll-hint">↓ scroll</span>
-</section>
+  <!-- Custom Cursor -->
+  <div class="cursor" id="custom-cursor" aria-hidden="true"></div>
 
-<!-- ═══ SIGNAL ═══ -->
-<section id="section-signal" aria-label="Philosophy">
-  <h2 class="signal-statement" id="signal-statement">The systems behind the products you trust were built by engineers like me.</h2>
-  <p class="signal-support" id="signal-support">I design infrastructure that scales, backends that hold, and systems that don't wake their owners up at 3am. The invisible layer — made deliberately.</p>
-  <div class="oscilloscope" id="oscilloscope">
-    <svg width="120" height="80" viewBox="0 0 120 80" fill="none" aria-hidden="true">
-      <path id="osc-line-1" d="M0,20 Q30,10 60,20 T120,20" stroke="var(--signal)" stroke-width="0.75" opacity="0.4" fill="none"/>
-      <path id="osc-line-2" d="M0,40 Q20,30 40,40 T80,40" stroke="var(--signal)" stroke-width="0.75" opacity="0.3" fill="none"/>
-      <path id="osc-line-3" d="M0,60 Q14,54 28,60 T56,60" stroke="var(--signal)" stroke-width="0.75" opacity="0.2" fill="none"/>
-    </svg>
-  </div>
-</section>
+  <!-- Header Navigation -->
+  <header class="p-nav">
+    <a href="#top" class="monogram">AC<span>°</span></a>
+    <nav>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="menu-button" id="menu-toggle" aria-label="Toggle menu">
+      <svg id="menu-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#work" class="mobile-link">Selected work</a>
+      <a href="#about" class="mobile-link">About Abeer</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+  </header>
 
-<!-- ═══ ARCHITECTURE ═══ -->
-<section id="section-arch" aria-label="Architecture philosophy">
-  <div class="arch-inner">
-    <div class="arch-header">
-      <div class="section-label">
-        <span class="label-line"></span>
-        <span>[ ARCHITECTURE ]</span>
+  <main class="portfolio-main">
+
+    <!-- Hero Section -->
+    <section class="p-hero">
+      <div class="hero-meta">
+        <span>Independent builder</span>
+        <span>India / 26°N</span>
       </div>
-      <h2 class="section-title" style="font-size: clamp(36px, 5vw, 64px);">How I think about systems</h2>
-    </div>
-    <div id="arch-diagram-wrap">
-      <svg id="arch-diagram" viewBox="0 0 900 660" fill="none" role="img" aria-label="System architecture diagram showing layers from client to observability">
-        <defs>
-          <filter id="refract">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" seed="2"/>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-        </defs>
-
-        <!-- Layer 1: CLIENT -->
-        <g class="arch-layer" data-layer="CLIENT" data-cursor="arch" role="button" tabindex="0" aria-label="CLIENT layer: Browser, Mobile, API Consumer" style="opacity:0;">
-          <rect x="100" y="20" width="700" height="60" rx="4" fill="none" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="120" y="45" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">CLIENT</text>
-          <text x="120" y="65" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">Browser · Mobile · API Consumer</text>
-        </g>
-
-        <!-- Connectors 1→2 -->
-        <line class="arch-connector" data-from="CLIENT" data-to="EDGE" x1="300" y1="80" x2="300" y2="120" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="CLIENT" data-to="EDGE" x1="600" y1="80" x2="600" y2="120" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-
-        <!-- Layer 2: EDGE -->
-        <g class="arch-layer" data-layer="EDGE" data-cursor="arch" role="button" tabindex="0" aria-label="EDGE layer: CDN, Load Balancer, Rate Limiter" style="opacity:0;">
-          <rect x="100" y="120" width="700" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="120" y="145" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">EDGE</text>
-          <text x="120" y="165" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">CDN · Load Balancer · Rate Limiter</text>
-        </g>
-
-        <!-- Connectors 2→3 -->
-        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="250" y1="180" x2="250" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="450" y1="180" x2="450" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="EDGE" data-to="APPLICATION" x1="650" y1="180" x2="650" y2="220" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-
-        <!-- Layer 3: APPLICATION (highlighted, with refractive overlay) -->
-        <g class="arch-layer" data-layer="APPLICATION" data-cursor="arch" role="button" tabindex="0" aria-label="APPLICATION layer: REST API, Auth, Business Logic, Background Jobs" style="opacity:0;">
-          <rect x="100" y="220" width="700" height="80" rx="4" fill="var(--shell)" stroke="var(--signal)" stroke-width="0.5"/>
-          <text x="120" y="248" fill="var(--bone)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">APPLICATION</text>
-          <text x="120" y="278" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">REST API · Auth · Business Logic · Background Jobs</text>
-        </g>
-        <!-- Refractive overlay -->
-        <rect id="refract-overlay" x="100" y="220" width="700" height="80" rx="4" fill="none" filter="url(#refract)" pointer-events="none" opacity="0.4" style="opacity:0;"/>
-
-        <!-- Connectors 3→4 -->
-        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="200" y1="300" x2="200" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="450" y1="300" x2="450" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="APPLICATION" data-to="DATA" x1="700" y1="300" x2="700" y2="350" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-
-        <!-- Layer 4: DATA (three sub-panels) -->
-        <g class="arch-layer" data-layer="DATA" data-cursor="arch" role="button" tabindex="0" aria-label="DATA layer: PostgreSQL, Redis Cache, Message Queue" style="opacity:0;">
-          <rect x="100" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="120" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">PostgreSQL</text>
-          <text x="120" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Source of truth</text>
-
-          <rect x="340" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="360" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">Redis Cache</text>
-          <text x="360" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Speed layer</text>
-
-          <rect x="580" y="350" width="220" height="60" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="600" y="375" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="0.5">Message Queue</text>
-          <text x="600" y="395" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Async dispatch</text>
-        </g>
-
-        <!-- Connectors 4→5 -->
-        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="250" y1="410" x2="250" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="450" y1="410" x2="450" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="DATA" data-to="INFRASTRUCTURE" x1="650" y1="410" x2="650" y2="460" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-
-        <!-- Layer 5: INFRASTRUCTURE -->
-        <g class="arch-layer" data-layer="INFRASTRUCTURE" data-cursor="arch" role="button" tabindex="0" aria-label="INFRASTRUCTURE layer: Docker, Linux, Networking, DNS" style="opacity:0;">
-          <rect x="100" y="460" width="700" height="60" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="120" y="485" fill="var(--ash)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">INFRASTRUCTURE</text>
-          <text x="120" y="505" fill="var(--muted)" font-family="var(--font-sans)" font-size="13">Docker · Linux · Networking · DNS</text>
-        </g>
-
-        <!-- Connectors 5→6 -->
-        <line class="arch-connector" data-from="INFRASTRUCTURE" data-to="OBSERVABILITY" x1="300" y1="520" x2="300" y2="560" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-        <line class="arch-connector" data-from="INFRASTRUCTURE" data-to="OBSERVABILITY" x1="600" y1="520" x2="600" y2="560" stroke="var(--seam)" stroke-width="0.5" style="opacity:0;"/>
-
-        <!-- Layer 6: OBSERVABILITY (dashed) -->
-        <g class="arch-layer" data-layer="OBSERVABILITY" data-cursor="arch" role="button" tabindex="0" aria-label="OBSERVABILITY layer: Logs, Metrics, Traces, Alerts" style="opacity:0;">
-          <rect x="100" y="560" width="700" height="50" rx="4" fill="none" stroke="var(--seam)" stroke-width="0.5" stroke-dasharray="4 4"/>
-          <text x="120" y="582" fill="var(--muted)" font-family="var(--font-mono)" font-size="11" letter-spacing="1">OBSERVABILITY</text>
-          <text x="120" y="600" fill="var(--muted)" font-family="var(--font-sans)" font-size="12">Logs · Metrics · Traces · Alerts</text>
-        </g>
-
-        <!-- Pulse circles container -->
-        <g id="arch-pulses"></g>
-      </svg>
-      <div class="arch-tooltip" id="arch-tooltip"></div>
-    </div>
-    <p class="arch-footnote" id="arch-footnote">// This architecture pattern underlies most of the projects below</p>
-  </div>
-</section>
-
-<!-- ═══ WORK ═══ -->
-<section id="section-work" aria-label="Projects">
-  <div class="work-label-wrap">
-    <div class="section-label" style="margin-bottom: 48px;">
-      <span class="label-line"></span>
-      <span>[ WORK ]</span>
-    </div>
-  </div>
-
-  <!-- Project 1: ARK CRM -->
-  <div class="project-chapter" data-project="ark">
-    <div class="chapter-grid">
-      <div class="chapter-left">
-        <div class="chapter-number">#01</div>
-        <h3 class="project-name">ARK CRM</h3>
-        <div class="project-descriptor">Cold-pressed oil business — full-stack CRM</div>
-        <p class="project-description">Built for a solopreneur who needed enterprise CRM without the enterprise overhead. React frontend, Supabase backend. The architecture challenge was making complex relational data feel simple to a non-technical user without sacrificing data integrity.</p>
-        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="ARK CRM architecture: React UI to Supabase Auth to PostgreSQL to Row Level Security">
-          <rect x="10" y="20" width="90" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="55" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">React UI</text>
-          <line x1="100" y1="38" x2="130" y2="38" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="115" cy="38" r="2" fill="var(--signal)"/>
-          <rect x="130" y="20" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="185" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Supabase Auth</text>
-          <line x1="240" y1="38" x2="270" y2="38" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="255" cy="38" r="2" fill="var(--signal)"/>
-          <rect x="270" y="20" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="325" y="43" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PostgreSQL</text>
-          <line x1="325" y1="56" x2="325" y2="80" stroke="var(--seam)" stroke-width="0.5"/>
-          <rect x="250" y="80" width="150" height="30" rx="4" fill="none" stroke="var(--signal)" stroke-width="0.5" stroke-dasharray="3 3"/>
-          <text x="325" y="100" fill="var(--signal)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Row Level Security</text>
-        </svg>
+      <div class="hero-statement">
+        <p class="eyebrow">Hello, I'm Abeer Choubey <span class="status-dot"></span> currently building</p>
+        <h1>Things that<br>need to <em>work.</em></h1>
+        <p class="hero-note">Backend systems, infrastructure, automation,<br>and products with a little more backbone.</p>
       </div>
-      <div class="chapter-right">
-        <div class="system-detail"><span class="sd-comment">-- ARK CRM core schema</span>
 
-<span class="sd-keyword">TABLE</span> customers (
-  id          uuid <span class="sd-type">PRIMARY KEY</span>,
-  name        text <span class="sd-keyword">NOT NULL</span>,
-  phone       text,
-  tier        enum(<span class="sd-string">'standard'</span>, <span class="sd-string">'wholesale'</span>),
-  created_at  timestamptz <span class="sd-keyword">DEFAULT</span> now()
-);
-
-<span class="sd-keyword">TABLE</span> orders (
-  id          uuid <span class="sd-type">PRIMARY KEY</span>,
-  customer_id uuid <span class="sd-keyword">REFERENCES</span> customers,
-  total_ml    integer,
-  status      enum(<span class="sd-string">'pending'</span>, <span class="sd-string">'fulfilled'</span>),
-  created_at  timestamptz <span class="sd-keyword">DEFAULT</span> now()
-);</div>
+      <!-- GSAP Animated 3D Hero Glyph -->
+      <div class="hero-glyph" id="hero-glyph" aria-hidden="true">
+        <i></i><i></i><i></i><b></b>
       </div>
-    </div>
-  </div>
 
-  <div class="project-separator"><div class="pulse-dot"></div></div>
+      <a href="#work" class="hero-scroll" aria-label="Scroll down to work section">
+        Start looking 
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </a>
+    </section>
 
-  <!-- Project 2: Veylox -->
-  <div class="project-chapter" data-project="veylox">
-    <div class="chapter-grid">
-      <div class="chapter-left">
-        <div class="chapter-number">#02</div>
-        <h3 class="project-name">Veylox</h3>
-        <div class="project-descriptor">Premium digital agency — performance-first frontend</div>
-        <p class="project-description">An agency landing page built with the care of a product. Vite + React. The design challenge was creating a premium feel without over-engineering the build. Result: sub-1s FCP, Lighthouse 97+, zero runtime dependencies in production.</p>
-        <a href="https://veylox.abeer.lol" class="project-link" data-cursor="link" target="_blank" rel="noopener" aria-label="Visit Veylox website">veylox.abeer.lol ↗</a>
-        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" style="margin-top:24px;" role="img" aria-label="Veylox architecture: Vite build to React components to static host to CDN">
-          <rect x="10" y="40" width="80" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="50" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Vite Build</text>
-          <line x1="90" y1="58" x2="120" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="105" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="120" y="40" width="110" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="175" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">React Components</text>
-          <line x1="230" y1="58" x2="260" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="245" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="260" y="40" width="60" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="290" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Static</text>
-          <line x1="320" y1="58" x2="350" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="335" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="350" y="40" width="42" height="36" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="371" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">CDN</text>
-        </svg>
+    <!-- Intro / About Section -->
+    <section class="p-intro" id="about">
+      <div class="reveal">
+        <p class="eyebrow">The short version / 15 / India</p>
+        <h2>I like the part of the product<br>most people never <em>see.</em></h2>
       </div>
-      <div class="chapter-right">
-        <div class="system-detail"><span class="sd-comment">// Veylox performance targets</span>
-
-FCP:  &lt; 0.9s
-LCP:  &lt; 1.4s
-CLS:  0.000
-TTI:  &lt; 1.8s
-
-<span class="sd-comment">Build output:</span>
-dist/   44 kB (gzipped)
-chunks: 3 (vendor split)
-images: WebP, lazy-loaded</div>
+      <div class="intro-aside reveal" data-delay="100">
+        <p>Good systems make space for people to do their real work. I build the routes, jobs, queues, data, and tools that make that possible.</p>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+          <a class="inline-link" href="https://github.com/veyloxgit" target="_blank" rel="noopener noreferrer" aria-label="Visit Abeer Choubey's GitHub profile">
+            GitHub 
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          </a>
+          <a class="inline-link" href="https://www.linkedin.com/in/abeerchoubey" target="_blank" rel="noopener noreferrer" aria-label="Visit Abeer Choubey's LinkedIn profile">
+            LinkedIn 
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="project-separator"><div class="pulse-dot"></div></div>
-
-  <!-- Project 3: AI Compositor -->
-  <div class="project-chapter" data-project="ai-compositor">
-    <div class="chapter-grid">
-      <div class="chapter-left">
-        <div class="chapter-number">#03</div>
-        <h3 class="project-name">AI Compositor</h3>
-        <div class="project-descriptor">Compositional AI workflow engine</div>
-        <p class="project-description">An AI system that chains model calls into coherent multi-step workflows. The engineering challenge was managing state between inference calls without a traditional server — using event-driven architecture with a queue-backed job processor.</p>
-        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="AI Compositor architecture: Input to Queue to LLM Calls to State Machine to Output">
-          <rect x="10" y="44" width="56" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="38" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Input</text>
-          <line x1="66" y1="58" x2="86" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="76" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="86" y="44" width="56" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="114" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Queue</text>
-          <line x1="142" y1="58" x2="162" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="152" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="162" y="44" width="70" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="197" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">LLM Calls</text>
-          <line x1="232" y1="58" x2="252" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="242" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="252" y="44" width="70" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="287" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">State M.</text>
-          <line x1="322" y1="58" x2="342" y2="58" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="332" cy="58" r="2" fill="var(--signal)"/>
-          <rect x="342" y="44" width="48" height="28" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="366" y="63" fill="var(--ash)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">Output</text>
-        </svg>
+    <!-- Work Section -->
+    <section class="p-work" id="work">
+      <div class="section-rule">
+        <span>Selected work</span>
+        <span>Four things worth opening</span>
       </div>
-      <div class="chapter-right">
-        <div class="system-detail"><span class="sd-comment">// AI Compositor flow</span>
+      <div class="project-list">
+        
+        <div class="project-row violet reveal" onclick="openProject('nigel')">
+          <span class="project-no">01</span>
+          <div class="project-title">
+            <h3>Nigel</h3>
+            <p>AI orchestration</p>
+          </div>
+          <p class="project-description">A calmer control room for agents, tools, and the decisions between them.</p>
+          <span class="project-year">2026</span>
+          <span class="project-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </span>
+        </div>
 
-<span class="sd-keyword">STEP 1:</span> ingest(input)
-  → validate schema
-  → enqueue(job_id, payload)
+        <div class="project-row rust reveal" data-delay="50" onclick="openProject('veylox')">
+          <span class="project-no">02</span>
+          <div class="project-title">
+            <h3>Veylox</h3>
+            <p>Software practice</p>
+          </div>
+          <p class="project-description">A considered digital presence for a practice that builds useful internal machinery.</p>
+          <span class="project-year">2026</span>
+          <span class="project-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </span>
+        </div>
 
-<span class="sd-keyword">STEP 2:</span> process(job_id)
-  → fetch context from cache
-  → call_model(prompt, context)
-  → write result → job_store
+        <div class="project-row lime reveal" data-delay="100" onclick="openProject('gymledger')">
+          <span class="project-no">03</span>
+          <div class="project-title">
+            <h3>GymLedger</h3>
+            <p>Operations software</p>
+          </div>
+          <p class="project-description">A practical operating layer for people who would rather run a gym than manage a spreadsheet.</p>
+          <span class="project-year">2025</span>
+          <span class="project-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </span>
+        </div>
 
-<span class="sd-keyword">STEP 3:</span> compose(results[])
-  → merge outputs
-  → validate coherence
-  → emit final artifact</div>
+        <div class="project-row blue reveal" data-delay="150" onclick="openProject('signals')">
+          <span class="project-no">04</span>
+          <div class="project-title">
+            <h3>Signal</h3>
+            <p>Railway simulation</p>
+          </div>
+          <p class="project-description">A simulation project built around state, timing, and the quiet importance of safe systems.</p>
+          <span class="project-year">2025</span>
+          <span class="project-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </span>
+        </div>
+
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="project-separator"><div class="pulse-dot"></div></div>
+    <!-- Marquee -->
+    <section class="p-marquee" aria-label="Technology interests">
+      <div>Go <span>✳</span> Linux <span>✳</span> PostgreSQL <span>✳</span> Docker <span>✳</span> Systems thinking <span>✳</span> Go <span>✳</span> Linux <span>✳</span> PostgreSQL <span>✳</span> Docker <span>✳</span> Systems thinking <span>✳</span></div>
+    </section>
 
-  <!-- Project 4: GymLedger -->
-  <div class="project-chapter" data-project="gymledger">
-    <div class="chapter-grid">
-      <div class="chapter-left">
-        <div class="chapter-number">#04</div>
-        <h3 class="project-name">GymLedger</h3>
-        <div class="project-descriptor">Personal training tracker — built like a product</div>
-        <p class="project-description">A fitness tracking application built not because similar apps don't exist, but because building it right was the point. PostgreSQL stores every workout as an append-only log. The schema was designed for time-series queries before the first line of application code.</p>
-        <svg class="mini-arch" viewBox="0 0 400 120" fill="none" role="img" aria-label="GymLedger architecture: Input UI to API layer to PostgreSQL with time-series schema">
-          <rect x="10" y="44" width="80" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="50" y="65" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">Input UI</text>
-          <line x1="90" y1="60" x2="120" y2="60" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="105" cy="60" r="2" fill="var(--signal)"/>
-          <rect x="120" y="44" width="70" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="155" y="65" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">API Layer</text>
-          <line x1="190" y1="60" x2="220" y2="60" stroke="var(--seam)" stroke-width="0.5"/>
-          <circle cx="205" cy="60" r="2" fill="var(--signal)"/>
-          <rect x="220" y="44" width="170" height="32" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="305" y="60" fill="var(--ash)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PostgreSQL</text>
-          <text x="305" y="72" fill="var(--signal)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">time-series schema</text>
-        </svg>
+    <!-- Capabilities Section -->
+    <section class="p-capabilities">
+      <div class="reveal">
+        <p class="eyebrow">How I'm useful</p>
+        <h2>A preference for<br><em>useful complexity.</em></h2>
       </div>
-      <div class="chapter-right">
-        <div class="system-detail"><span class="sd-comment">-- GymLedger: append-only workout log</span>
-
-<span class="sd-keyword">TABLE</span> workout_sessions (
-  id         uuid <span class="sd-type">PRIMARY KEY</span>,
-  started_at timestamptz <span class="sd-keyword">NOT NULL</span>,
-  ended_at   timestamptz,
-  notes      text
-);
-
-<span class="sd-keyword">TABLE</span> exercise_sets (
-  id          uuid <span class="sd-type">PRIMARY KEY</span>,
-  session_id  uuid <span class="sd-keyword">REFERENCES</span> workout_sessions,
-  exercise    text <span class="sd-keyword">NOT NULL</span>,
-  reps        smallint,
-  weight_kg   numeric(5,2),
-  logged_at   timestamptz <span class="sd-keyword">DEFAULT</span> now()
-);</div>
+      <div class="cap-list">
+        <article class="reveal" data-delay="50">
+          <span>01</span>
+          <h3>Backend systems</h3>
+          <p>Reliable APIs, data models, and the difficult bits underneath.</p>
+        </article>
+        <article class="reveal" data-delay="100">
+          <span>02</span>
+          <h3>Infrastructure</h3>
+          <p>Containers, reverse proxies, self-hosted services, and sensible deployment.</p>
+        </article>
+        <article class="reveal" data-delay="150">
+          <span>03</span>
+          <h3>Automation</h3>
+          <p>Workflows that remove repetitive work without adding a new dashboard.</p>
+        </article>
+        <article class="reveal" data-delay="200">
+          <span>04</span>
+          <h3>AI products</h3>
+          <p>Agent systems with constraints, observability, and an actual job to do.</p>
+        </article>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ═══ LAB ═══ -->
-<section id="section-lab" aria-label="Homelab">
-  <div class="section-label">
-    <span class="label-line"></span>
-    <span>[ THE LAB ]</span>
-  </div>
-  <h2 class="lab-statement">The systems I build for myself are the ones that taught me everything.</h2>
+    <!-- Lab Section -->
+    <section class="p-lab">
+      <div class="lab-visual">
+        <div class="terminal">
+          <div><i></i><i></i><i></i></div>
+          <p><span>abeer@arch</span>:~$ build --with-intent</p>
+          <b>✓ Systems online</b>
+        </div>
+        <svg width="31" height="31" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+      </div>
+      <div class="lab-copy reveal">
+        <p class="eyebrow">A place to keep learning</p>
+        <h2>Always close<br>to the <em>terminal.</em></h2>
+        <p>I'm drawn to open source, self-hosting, developer tools, and the endless work of making computers feel more human.</p>
+      </div>
+    </section>
 
-  <div class="lab-diagram-container">
-    <div id="homelab-diagram-wrap">
-      <svg id="homelab-diagram" viewBox="0 0 860 420" fill="none" role="img" aria-label="Homelab architecture showing hardware, services, and access layers">
-        <!-- ZONE 1: HARDWARE -->
-        <text x="10" y="20" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">HARDWARE</text>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="10" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="20" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Primary Server</text>
-          <text x="20" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">x86 · 16GB RAM · 2TB</text>
-          <circle cx="180" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="210" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="220" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Pi Cluster</text>
-          <text x="220" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">Pi 4 ×3 · ARM · Kubernetes</text>
-          <circle cx="380" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="410" y="30" width="180" height="56" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="420" y="50" fill="var(--ash)" font-family="var(--font-mono)" font-size="11">Network Switch</text>
-          <text x="420" y="68" fill="var(--muted)" font-family="var(--font-mono)" font-size="9">Gigabit · VLAN-capable</text>
-          <circle cx="580" cy="40" r="3" fill="var(--signal)" class="status-dot" opacity="1"/>
-        </g>
+    <!-- Contact Section -->
+    <section class="p-contact" id="contact">
+      <div>
+        <p class="eyebrow">An open line</p>
+        <h2>Have a hard thing<br>you're trying to <em>make?</em></h2>
+        <p>
+          Connect on 
+          <a href="https://discord.gg/PRA8W7eDB5" target="_blank" rel="noopener noreferrer" aria-label="Join Client Discord server for project inquiries">Client Discord</a> 
+          or 
+          <a href="https://discord.gg/XjBJnr4wRz" target="_blank" rel="noopener noreferrer" aria-label="Join Freelancer Discord community">Freelancer Discord</a> 
+          (username: <code>pxhsv</code>), connect via 
+          <a href="https://www.linkedin.com/in/abeerchoubey" target="_blank" rel="noopener noreferrer" aria-label="Visit Abeer's LinkedIn profile">LinkedIn</a> / 
+          <a href="https://github.com/veyloxgit" target="_blank" rel="noopener noreferrer" aria-label="Visit Abeer's GitHub profile">GitHub</a>, 
+          or email directly at 
+          <a href="mailto:sentinel.loqs@proton.me" aria-label="Send email to sentinel.loqs@proton.me">sentinel.loqs@proton.me</a>.
+        </p>
+      </div>
+      <a href="mailto:sentinel.loqs@proton.me" class="contact-orb" aria-label="Send email to sentinel.loqs@proton.me">
+        Let's make<br>something useful 
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>
+      </a>
+    </section>
 
-        <!-- Connectors H→S -->
-        <line x1="100" y1="86" x2="100" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
-        <line x1="300" y1="86" x2="300" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
-        <line x1="500" y1="86" x2="500" y2="130" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
+    <!-- Footer -->
+    <footer class="p-footer">
+      <span>© <span id="year">2026</span> Abeer Choubey</span>
+      <span>
+        <a href="https://github.com/veyloxgit" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">GitHub</a> • 
+        <a href="https://www.linkedin.com/in/abeerchoubey" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">LinkedIn</a> • 
+        <a href="mailto:sentinel.loqs@proton.me" aria-label="Send email">Email</a>
+      </span>
+      <a href="#top" aria-label="Scroll back to top of page">
+        Back to top 
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+    </footer>
 
-        <!-- ZONE 2: SERVICES -->
-        <text x="10" y="120" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">SERVICES</text>
+  </main>
 
-        <!-- Row 1 -->
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="10" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="20" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Gitea</text>
-          <text x="20" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Self-hosted Git</text>
-          <circle cx="170" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="200" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="210" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Portainer</text>
-          <text x="210" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Container Mgmt</text>
-          <circle cx="360" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="390" y="130" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="400" y="150" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Uptime Kuma</text>
-          <text x="400" y="164" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Monitoring</text>
-          <circle cx="550" cy="140" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-
-        <!-- Row 2 -->
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="10" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="20" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">PostgreSQL</text>
-          <text x="20" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Database</text>
-          <circle cx="170" cy="194" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="200" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="210" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Nginx Proxy</text>
-          <text x="210" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Reverse Proxy</text>
-          <circle cx="360" cy="194" r="3" fill="var(--muted)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="390" y="184" width="170" height="44" rx="4" fill="var(--void)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="400" y="204" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Wireguard</text>
-          <text x="400" y="218" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">VPN</text>
-          <circle cx="550" cy="194" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-
-        <!-- Connectors S→A -->
-        <line x1="100" y1="228" x2="100" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
-        <line x1="300" y1="228" x2="300" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
-        <line x1="500" y1="228" x2="500" y2="280" stroke="var(--seam)" stroke-width="0.5" class="lab-connector"/>
-
-        <!-- ZONE 3: ACCESS -->
-        <text x="10" y="270" fill="var(--muted)" font-family="var(--font-mono)" font-size="10" letter-spacing="1">ACCESS</text>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="10" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="20" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Remote SSH</text>
-          <text x="20" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Terminal access</text>
-          <circle cx="170" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="200" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="210" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Tailscale</text>
-          <text x="210" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Mesh network</text>
-          <circle cx="360" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-        <g class="homelab-node" data-cursor="arch">
-          <rect x="390" y="280" width="170" height="44" rx="4" fill="var(--shell)" stroke="var(--seam)" stroke-width="0.5"/>
-          <text x="400" y="300" fill="var(--ash)" font-family="var(--font-mono)" font-size="10">Cloudflare Tunnel</text>
-          <text x="400" y="314" fill="var(--muted)" font-family="var(--font-sans)" font-size="9">Public exposure</text>
-          <circle cx="550" cy="290" r="3" fill="var(--signal)" class="status-dot"/>
-        </g>
-
-        <!-- Pulse container -->
-        <g id="lab-pulses"></g>
-      </svg>
-    </div>
-
-    <div class="lab-status-panel">
-      <div><span class="status-label">UPTIME</span> <span class="status-value">99.4%</span></div>
-      <div><span class="status-label">SERVICES</span> <span class="status-value">12 running</span></div>
-      <div><span class="status-label">STORAGE</span>  <span class="status-value">1.4 TB / 2 TB</span></div>
-      <div><span class="status-label">LAST BOOT</span> <span class="status-value">47d ago</span></div>
-    </div>
+  <!-- Project Detail Modal Overlay -->
+  <div class="project-modal" id="project-modal">
+    <span class="back-link" onclick="closeProject()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back to workspace
+    </span>
+    <section class="project-hero">
+      <p class="eyebrow" id="pm-eyebrow">01 / AI orchestration / 2026</p>
+      <h1 id="pm-name">Nigel</h1>
+      <p id="pm-desc">A calmer control room for agents, tools, and the decisions between them.</p>
+      <div class="project-shape" id="pm-shape">
+        <span></span><span></span><span></span>
+      </div>
+    </section>
+    <section class="project-detail">
+      <p class="eyebrow">A note on the work</p>
+      <p class="project-note" id="pm-note">Designing for visibility when the work is mostly invisible.</p>
+      <div class="project-tags" id="pm-tags"></div>
+    </section>
+    <section class="project-next">
+      <p>Next up</p>
+      <a id="pm-next-btn" onclick="nextProject()">
+        <span id="pm-next-name">Veylox</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>
+      </a>
+    </section>
   </div>
 
-  <p class="lab-description">The homelab is where the abstractions disappear. You can't pretend to understand networking until you've debugged your own DNS at midnight. Every production decision I make is informed by something I broke here first.</p>
-</section>
+  <script>
+    // Project Data Registry
+    const projectsData = {
+      nigel: {
+        slug: "nigel",
+        number: "01",
+        name: "Nigel",
+        kind: "AI orchestration",
+        year: "2026",
+        description: "A calmer control room for agents, tools, and the decisions between them.",
+        note: "Designing for visibility when the work is mostly invisible.",
+        stack: ["TypeScript", "Agents", "Systems"],
+        accent: "violet",
+        nextSlug: "veylox",
+        nextName: "Veylox"
+      },
+      veylox: {
+        slug: "veylox",
+        number: "02",
+        name: "Veylox",
+        kind: "Software practice",
+        year: "2026",
+        description: "A considered digital presence for a practice that builds useful internal machinery.",
+        note: "The interface is spare. The underlying system should not be.",
+        stack: ["Next.js", "Motion", "Strategy"],
+        accent: "rust",
+        nextSlug: "gymledger",
+        nextName: "GymLedger"
+      },
+      gymledger: {
+        slug: "gymledger",
+        number: "03",
+        name: "GymLedger",
+        kind: "Operations software",
+        year: "2025",
+        description: "A practical operating layer for people who would rather run a gym than manage a spreadsheet.",
+        note: "Useful software makes the next action obvious.",
+        stack: ["Postgres", "React", "Auth"],
+        accent: "lime",
+        nextSlug: "signals",
+        nextName: "Signal"
+      },
+      signals: {
+        slug: "signals",
+        number: "04",
+        name: "Signal",
+        kind: "Railway simulation",
+        year: "2025",
+        description: "A simulation project built around state, timing, and the quiet importance of safe systems.",
+        note: "Small rules, carefully composed, make a convincing world.",
+        stack: ["Go", "Simulation", "Logic"],
+        accent: "blue",
+        nextSlug: "nigel",
+        nextName: "Nigel"
+      }
+    };
 
-<!-- ═══ PRINCIPLES ═══ -->
-<section id="section-principles" aria-label="Engineering principles">
-  <div class="section-label" style="margin-bottom: 80px;">
-    <span class="label-line"></span>
-    <span>[ HOW I BUILD ]</span>
-  </div>
+    let currentProjectSlug = "nigel";
 
-  <div class="principle" data-principle="1">
-    <div class="principle-label">on architecture</div>
-    <p class="principle-text">Design for failure. Everything else is a feature.</p>
-  </div>
-  <div class="principle" data-principle="2">
-    <div class="principle-label">on complexity</div>
-    <p class="principle-text">The simplest system that solves the real problem wins.</p>
-  </div>
-  <div class="principle" data-principle="3">
-    <div class="principle-label">on ownership</div>
-    <p class="principle-text">If it breaks at 3am, I should be the one who built it.</p>
-  </div>
-  <div class="principle" data-principle="4">
-    <div class="principle-label">on documentation</div>
-    <p class="principle-text">Undocumented systems are gifts to your future enemy.</p>
-  </div>
-</section>
+    function openProject(slug) {
+      const p = projectsData[slug];
+      if (!p) return;
+      currentProjectSlug = slug;
 
-<!-- ═══ CONNECT ═══ -->
-<section id="section-connect" aria-label="Contact">
-  <div class="section-label" style="margin-bottom: 40px;">
-    <span class="label-line"></span>
-    <span>[ CONNECT ]</span>
-  </div>
+      document.getElementById("pm-eyebrow").textContent = `${p.number} / ${p.kind} / ${p.year}`;
+      document.getElementById("pm-name").textContent = p.name;
+      document.getElementById("pm-desc").textContent = p.description;
+      document.getElementById("pm-note").textContent = p.note;
+      document.getElementById("pm-next-name").textContent = p.nextName;
 
-  <h2 class="connect-statement">Let's build something<br>that matters.</h2>
-  <p class="connect-support">Open to senior engineering roles, infrastructure consulting, and genuinely interesting problems.</p>
+      const tagsContainer = document.getElementById("pm-tags");
+      tagsContainer.innerHTML = p.stack.map(s => `<span>${s}</span>`).join('');
 
-  <div class="connect-links">
-    <a href="mailto:choubeyabeer@gmail.com" class="connect-link-row" data-cursor="link" aria-label="Send email to choubeyabeer@gmail.com">
-      <span class="cl-label">[EMAIL]</span>
-      <span class="cl-text">choubeyabeer@gmail.com</span>
-      <span class="cl-arrow">→</span>
-    </a>
-    <a href="mailto:sentinel.loqs@proton.me" class="connect-link-row" data-cursor="link" aria-label="Send email to sentinel.loqs@proton.me">
-      <span class="cl-label">[SECURE]</span>
-      <span class="cl-text">sentinel.loqs@proton.me</span>
-      <span class="cl-arrow">→</span>
-    </a>
-    <a href="https://github.com/abeerchoubey" target="_blank" rel="noopener" class="connect-link-row" data-cursor="link" aria-label="Visit GitHub profile github.com/abeerchoubey">
-      <span class="cl-label">[GITHUB]</span>
-      <span class="cl-text">github.com/abeerchoubey</span>
-      <span class="cl-arrow">→</span>
-    </a>
-    <a href="https://linkedin.com/in/abeerchoubey" target="_blank" rel="noopener" class="connect-link-row" data-cursor="link" aria-label="Visit LinkedIn profile linkedin.com/in/abeerchoubey">
-      <span class="cl-label">[LINKEDIN]</span>
-      <span class="cl-text">linkedin.com/in/abeerchoubey</span>
-      <span class="cl-arrow">→</span>
-    </a>
-    <div class="connect-link-row" data-cursor="link" aria-label="Discord username abeer.choubey">
-      <span class="cl-label">[DISCORD]</span>
-      <span class="cl-text">abeer.choubey</span>
-      <span class="cl-arrow">→</span>
-    </div>
-  </div>
+      const modal = document.getElementById("project-modal");
+      modal.className = `project-modal ${p.accent} active`;
+      document.body.style.overflow = "hidden";
+    }
 
-  <div class="connect-footer">Abeer Choubey © 2025  ·  Designed and built to be remembered</div>
-</section>
+    function closeProject() {
+      const modal = document.getElementById("project-modal");
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
 
-<script>
-(function() {
-  'use strict';
+    function nextProject() {
+      const p = projectsData[currentProjectSlug];
+      if (p && p.nextSlug) {
+        openProject(p.nextSlug);
+      }
+    }
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-  // ═══════════════════════════════════════
-  // GSAP REGISTER
-  // ═══════════════════════════════════════
-  if (window.gsap) {
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-  }
-
-  // ═══════════════════════════════════════
-  // LENIS SMOOTH SCROLL
-  // ═══════════════════════════════════════
-  let lenis = null;
-  if (window.Lenis && !prefersReduced) {
-    lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      smoothWheel: true
+    // Close modal on Escape key
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeProject();
     });
 
-    function raf(time) {
-      lenis.raf(time);
+    // Dynamic Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Hide Preloader on Load
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const preloader = document.getElementById("preloader");
+        if (preloader) {
+          preloader.style.opacity = "0";
+          setTimeout(() => preloader.style.display = "none", 450);
+        }
+      }, 150);
+    });
+
+    // Lenis Smooth Scroll
+    if (typeof Lenis !== "undefined") {
+      const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
       requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
 
-    if (window.ScrollTrigger) {
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
-    }
-  }
+    // Custom Cursor Pointer Follow
+    const cursor = document.getElementById("custom-cursor");
+    let mouseX = -40, mouseY = -40;
+    let cursorX = -40, cursorY = -40;
 
-  // ═══════════════════════════════════════
-  // CUSTOM CURSOR
-  // ═══════════════════════════════════════
-  if (!isMobile) {
-    const cursorDot = document.getElementById('cursor-dot');
-    const cursorRing = document.getElementById('cursor-ring');
-    let mouseX = 0, mouseY = 0;
-
-    document.addEventListener('mousemove', function(e) {
+    window.addEventListener("pointermove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      cursorDot.style.transform = 'translate(' + mouseX + 'px, ' + mouseY + 'px) translate(-50%, -50%)';
     });
 
-    if (window.gsap && !prefersReduced) {
-      gsap.ticker.add(function() {
-        gsap.to(cursorRing, { x: mouseX, y: mouseY, duration: 0.12, ease: 'power2.out', overwrite: true });
-      });
-    } else {
-      document.addEventListener('mousemove', function(e) {
-        cursorRing.style.transform = 'translate(' + e.clientX + 'px, ' + e.clientY + 'px) translate(-50%, -50%)';
-      });
-    }
-
-    // Cursor hover states
-    document.querySelectorAll('[data-cursor]').forEach(function(el) {
-      el.addEventListener('mouseenter', function() {
-        const cursorType = el.getAttribute('data-cursor');
-        cursorRing.classList.remove('link-mode', 'crosshair-mode', 'cta-mode');
-        if (cursorType === 'link') cursorRing.classList.add('link-mode');
-        else if (cursorType === 'arch') cursorRing.classList.add('crosshair-mode');
-        else if (cursorType === 'cta') cursorRing.classList.add('cta-mode');
-      });
-      el.addEventListener('mouseleave', function() {
-        cursorRing.classList.remove('link-mode', 'crosshair-mode', 'cta-mode');
-      });
-    });
-  }
-
-  // ═══════════════════════════════════════
-  // SIGNAL GRID CANVAS
-  // ═══════════════════════════════════════
-  const canvas = document.getElementById('signal-grid');
-  const ctx = canvas.getContext('2d');
-  let nodes = [];
-  let edges = [];
-  let pulses = [];
-  let canvasW = 0, canvasH = 0;
-  let canvasVisible = true;
-  let gridOpacity = 0.06;
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvasW = canvas.width;
-    canvasH = canvas.height;
-  }
-
-  function initGrid() {
-    resizeCanvas();
-    nodes = [];
-    edges = [];
-    const nodeCount = Math.min(35, Math.floor(canvasW * canvasH / 45000) + 20);
-    for (let i = 0; i < nodeCount; i++) {
-      nodes.push({
-        x: Math.random() * canvasW,
-        y: Math.random() * canvasH,
-        vx: (Math.random() - 0.5) * 0.08,
-        vy: (Math.random() - 0.5) * 0.08,
-        connections: 0
-      });
-    }
-    // Build edges
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 180 && nodes[i].connections < 3 && nodes[j].connections < 3) {
-          edges.push({ a: i, b: j, dist: dist });
-          nodes[i].connections++;
-          nodes[j].connections++;
-        }
+    function animateCursor() {
+      cursorX += (mouseX - cursorX) * 0.25;
+      cursorY += (mouseY - cursorY) * 0.25;
+      if (cursor) {
+        cursor.style.left = `${cursorX}px`;
+        cursor.style.top = `${cursorY}px`;
       }
+      requestAnimationFrame(animateCursor);
     }
-  }
+    animateCursor();
 
-  function spawnPulse() {
-    if (edges.length === 0) return;
-    const edge = edges[Math.floor(Math.random() * edges.length)];
-    pulses.push({
-      edge: edge,
-      progress: 0,
-      speed: 1 / (60 * 1.5 + Math.random() * 30)
-    });
-  }
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    let menuOpen = false;
 
-  function drawGrid() {
-    if (!canvasVisible) return;
-    ctx.clearRect(0, 0, canvasW, canvasH);
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener("click", () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle("active", menuOpen);
+      });
 
-    // Update positions
-    for (let n of nodes) {
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < 0 || n.x > canvasW) n.vx *= -1;
-      if (n.y < 0 || n.y > canvasH) n.vy *= -1;
-    }
-
-    // Draw edges
-    for (let e of edges) {
-      const na = nodes[e.a], nb = nodes[e.b];
-      const distOpacity = Math.max(0, 1 - e.dist / 180) * gridOpacity * 5;
-      ctx.strokeStyle = 'rgba(200, 245, 100, ' + distOpacity + ')';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(na.x, na.y);
-      ctx.lineTo(nb.x, nb.y);
-      ctx.stroke();
-    }
-
-    // Draw nodes
-    for (let n of nodes) {
-      ctx.fillStyle = 'rgba(200, 245, 100, ' + (gridOpacity * 5) + ')';
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Draw pulses
-    for (let i = pulses.length - 1; i >= 0; i--) {
-      const p = pulses[i];
-      p.progress += p.speed;
-      if (p.progress >= 1) {
-        pulses.splice(i, 1);
-        continue;
-      }
-      const na = nodes[p.edge.a], nb = nodes[p.edge.b];
-      const px = na.x + (nb.x - na.x) * p.progress;
-      const py = na.y + (nb.y - na.y) * p.progress;
-      const pulseOpacity = Math.sin(p.progress * Math.PI) * 0.9;
-      ctx.fillStyle = 'rgba(200, 245, 100, ' + pulseOpacity + ')';
-      ctx.beginPath();
-      ctx.arc(px, py, 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function animateGrid() {
-    drawGrid();
-    requestAnimationFrame(animateGrid);
-  }
-
-  if (!prefersReduced) {
-    initGrid();
-    animateGrid();
-    // Spawn pulses periodically
-    setInterval(function() {
-      if (canvasVisible && !prefersReduced) spawnPulse();
-    }, 6000 + Math.random() * 4000);
-  } else {
-    initGrid();
-    drawGrid();
-  }
-
-  window.addEventListener('resize', function() {
-    if (canvas.width !== window.innerWidth || canvas.height !== window.innerHeight) {
-      initGrid();
-    }
-  });
-
-  document.addEventListener('visibilitychange', function() {
-    canvasVisible = !document.hidden;
-  });
-
-  // Fade in canvas on load
-  setTimeout(function() {
-    canvas.style.opacity = isMobile ? '0.04' : '0.06';
-  }, 100);
-
-  // ═══════════════════════════════════════
-  // HERO NAME — SPLIT INTO CHARS
-  // ═══════════════════════════════════════
-  const heroName = document.getElementById('hero-name');
-  const nameText = heroName.textContent;
-  heroName.innerHTML = '';
-  nameText.split('').forEach(function(char) {
-    const span = document.createElement('span');
-    span.className = char === ' ' ? 'char space' : 'char';
-    span.textContent = char === ' ' ? '\u00A0' : char;
-    heroName.appendChild(span);
-  });
-
-  // ═══════════════════════════════════════
-  // ENTRY ANIMATION TIMELINE
-  // ═══════════════════════════════════════
-  window.addEventListener('load', function() {
-    if (prefersReduced) {
-      // Show everything immediately
-      document.querySelectorAll('.char').forEach(function(c) { c.style.opacity = 1; c.style.transform = 'translateY(0)'; });
-      document.getElementById('hero-descriptor').style.opacity = 1;
-      document.getElementById('hero-location').style.opacity = 1;
-      document.getElementById('scroll-hint').style.opacity = 0.5;
-      document.querySelector('nav').style.opacity = 1;
-      return;
-    }
-
-    const chars = document.querySelectorAll('#hero-name .char');
-
-    const tl = gsap.timeline({ delay: 0.3 });
-
-    // Name characters
-    tl.to(chars, {
-      y: 0,
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power3.out',
-      stagger: 0.04
-    }, 0.3);
-
-    // Descriptor
-    tl.to('#hero-descriptor', {
-      y: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, 1.4);
-
-    // Location
-    tl.to('#hero-location', {
-      opacity: 1,
-      duration: 0.4,
-      ease: 'power2.out'
-    }, 1.7);
-
-    // Nav
-    tl.fromTo('nav', {
-      y: -8,
-      opacity: 0
-    }, {
-      y: 0,
-      opacity: 1,
-      duration: 0.4,
-      ease: 'power2.out'
-    }, 2.0);
-
-    // Scroll hint
-    tl.to('#scroll-hint', {
-      opacity: 0.6,
-      duration: 0.4
-    }, 2.2);
-  });
-
-  // ═══════════════════════════════════════
-  // NAV SCROLL DIRECTION
-  // ═══════════════════════════════════════
-  let lastScrollY = 0;
-  let navHidden = false;
-
-  function handleNavScroll(scrollY) {
-    const nav = document.querySelector('nav');
-    const direction = scrollY > lastScrollY ? 1 : -1;
-
-    if (direction === 1 && scrollY > 80 && !navHidden) {
-      gsap.to(nav, { y: -80, duration: 0.3, ease: 'power2.inOut' });
-      navHidden = true;
-    } else if ((direction === -1 || scrollY <= 80) && navHidden) {
-      gsap.to(nav, { y: 0, duration: 0.3, ease: 'power2.out' });
-      navHidden = false;
-    }
-
-    lastScrollY = scrollY;
-  }
-
-  if (lenis) {
-    lenis.on('scroll', function(e) {
-      handleNavScroll(e.scroll || window.scrollY);
-    });
-  } else {
-    window.addEventListener('scroll', function() {
-      handleNavScroll(window.scrollY);
-    }, { passive: true });
-  }
-
-  // ═══════════════════════════════════════
-  // NAV LINK SMOOTH SCROLL
-  // ═══════════════════════════════════════
-  document.querySelectorAll('nav .nav-links a').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
-      const target = document.querySelector(targetId);
-      if (target) {
-        if (lenis) {
-          lenis.scrollTo(target, { offset: 0, duration: 1.2 });
-        } else if (window.gsap) {
-          gsap.to(window, { duration: 1, scrollTo: target, ease: 'power2.inOut' });
-        } else {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    });
-  });
-
-  // ═══════════════════════════════════════
-  // SIGNAL SECTION SCROLL REVEAL
-  // ═══════════════════════════════════════
-  if (window.ScrollTrigger && !prefersReduced) {
-    gsap.fromTo('#signal-statement', {
-      y: 32, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
-      scrollTrigger: { trigger: '#section-signal', start: 'top 75%', once: true }
-    });
-
-    gsap.fromTo('#signal-support', {
-      y: 32, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.15,
-      scrollTrigger: { trigger: '#section-signal', start: 'top 75%', once: true }
-    });
-  }
-
-  // ═══════════════════════════════════════
-  // OSCILLOSCOPE ANIMATION
-  // ═══════════════════════════════════════
-  if (!isMobile && !prefersReduced) {
-    const oscLines = ['osc-line-1', 'osc-line-2', 'osc-line-3'];
-    oscLines.forEach(function(id, i) {
-      const line = document.getElementById(id);
-      if (line) {
-        const baseD = line.getAttribute('d');
-        const durations = [3, 4, 5];
-        const amplitudes = [4, 3, 2];
-        let startTime = performance.now();
-
-        function animateOsc() {
-          const elapsed = (performance.now() - startTime) / 1000;
-          const cycle = elapsed / durations[i];
-          const phase = cycle * Math.PI * 2;
-          const amp = amplitudes[i];
-
-          // Modify the path d to oscillate
-          if (i === 0) {
-            line.setAttribute('d', 'M0,' + (20 + Math.sin(phase) * amp) +
-              ' Q30,' + (10 + Math.sin(phase + 1) * amp) +
-              ' 60,' + (20 + Math.sin(phase + 2) * amp) +
-              ' T120,' + (20 + Math.sin(phase + 3) * amp));
-          } else if (i === 1) {
-            line.setAttribute('d', 'M0,' + (40 + Math.sin(phase) * amp) +
-              ' Q20,' + (30 + Math.sin(phase + 1) * amp) +
-              ' 40,' + (40 + Math.sin(phase + 2) * amp) +
-              ' T80,' + (40 + Math.sin(phase + 3) * amp));
-          } else {
-            line.setAttribute('d', 'M0,' + (60 + Math.sin(phase) * amp) +
-              ' Q14,' + (54 + Math.sin(phase + 1) * amp) +
-              ' 28,' + (60 + Math.sin(phase + 2) * amp) +
-              ' T56,' + (60 + Math.sin(phase + 3) * amp));
-          }
-          requestAnimationFrame(animateOsc);
-        }
-        animateOsc();
-      }
-    });
-  }
-
-  // ═══════════════════════════════════════
-  // ARCHITECTURE DIAGRAM SCROLL REVEAL
-  // ═══════════════════════════════════════
-  const archLayers = document.querySelectorAll('.arch-layer');
-  const archConnectors = document.querySelectorAll('.arch-connector');
-  const refractOverlay = document.getElementById('refract-overlay');
-  const archFootnote = document.getElementById('arch-footnote');
-
-  if (window.ScrollTrigger && !prefersReduced) {
-    const archSection = document.getElementById('section-arch');
-
-    // CLIENT layer
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'top 70%',
-      end: 'top 40%',
-      onEnter: function() {
-        gsap.to(archLayers[0], { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
- gsap.to([archConnectors[0], archConnectors[1]], { opacity: 1, duration: 0.4, delay: 0.3 });
-      },
-      once: true
-    });
-
-    // EDGE layer
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'top 50%',
-      end: 'top 30%',
-      onEnter: function() {
-        gsap.to(archLayers[1], { opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to([archConnectors[2], archConnectors[3], archConnectors[4]], { opacity: 1, duration: 0.4, delay: 0.3 });
-      },
-      once: true
-    });
-
-    // APPLICATION layer
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'top 30%',
-      end: 'top 15%',
-      onEnter: function() {
-        gsap.to(archLayers[2], { opacity: 1, scale: 1, duration: 0.7, ease: 'power3.out', transformOrigin: 'center center' });
-        gsap.to(refractOverlay, { opacity: 0.4, duration: 0.7, delay: 0.2 });
-        gsap.to([archConnectors[5], archConnectors[6], archConnectors[7]], { opacity: 1, duration: 0.4, delay: 0.3 });
-      },
-      once: true
-    });
-
-    // DATA layer
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'top 10%',
-      end: 'top 0%',
-      onEnter: function() {
-        gsap.to(archLayers[3], { opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to([archConnectors[8], archConnectors[9], archConnectors[10]], { opacity: 1, duration: 0.4, delay: 0.3 });
-      },
-      once: true
-    });
-
-    // INFRASTRUCTURE layer
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'bottom 120%',
-      end: 'bottom 110%',
-      onEnter: function() {
-        gsap.to(archLayers[4], { opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to([archConnectors[11], archConnectors[12]], { opacity: 1, duration: 0.4, delay: 0.3 });
-      },
-      once: true
-    });
-
-    // OBSERVABILITY layer + footnote
-    ScrollTrigger.create({
-      trigger: archSection,
-      start: 'bottom 105%',
-      end: 'bottom 95%',
-      onEnter: function() {
-        gsap.to(archLayers[5], { opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to(archFootnote, { opacity: 1, duration: 0.5, delay: 0.4 });
-      },
-      once: true
-    });
-  } else if (prefersReduced) {
-    archLayers.forEach(function(l) { l.style.opacity = 1; l.style.transform = 'none'; });
-    archConnectors.forEach(function(c) { c.style.opacity = 1; });
-    if (refractOverlay) refractOverlay.style.opacity = 0.4;
-    if (archFootnote) archFootnote.style.opacity = 1;
-  }
-
-  // ═══════════════════════════════════════
-  // ARCHITECTURE TOOLTIPS + HOVER
-  // ═══════════════════════════════════════
-  const layerDescriptions = {
-    'CLIENT': 'What touches my code last — whatever form the consumer takes',
-    'EDGE': 'Where traffic dies before it becomes a problem',
-    'APPLICATION': 'Where decisions live. The hardest layer to design right.',
-    'DATA': 'PostgreSQL for truth. Redis for speed. Queues for everything that can wait.',
-    'INFRASTRUCTURE': 'Docker on Linux. Not because it’s trendy — because it’s correct.',
-    'OBSERVABILITY': 'The layer that tells you your other layers are lying.'
-  };
-
-  const archTooltip = document.getElementById('arch-tooltip');
-  const archSvg = document.getElementById('arch-diagram');
-  const archWrap = document.getElementById('arch-diagram-wrap');
-
-  archLayers.forEach(function(layer) {
-    const layerName = layer.getAttribute('data-layer');
-
-    function showTooltip() {
-      archTooltip.textContent = layerDescriptions[layerName] || '';
-      archTooltip.classList.add('visible');
-
-      // Position tooltip near the layer
-      const layerRect = layer.getBoundingClientRect();
-      const wrapRect = archWrap.getBoundingClientRect();
-      archTooltip.style.left = (layerRect.left - wrapRect.left + layerRect.width / 2 - 140) + 'px';
-      archTooltip.style.top = (layerRect.top - wrapRect.top - 50) + 'px';
-
-      // Highlight layer, dim others
-      archLayers.forEach(function(other) {
-        if (other !== layer) {
-          other.style.opacity = '0.3';
-        } else {
-          other.style.opacity = '1';
-          const rect = other.querySelector('rect');
-          if (rect) rect.setAttribute('stroke', 'var(--bone)');
-          const texts = other.querySelectorAll('text');
-          if (texts[0]) texts[0].setAttribute('fill', 'var(--bone)');
-        }
+      document.querySelectorAll(".mobile-link").forEach(link => {
+        link.addEventListener("click", () => {
+          menuOpen = false;
+          mobileMenu.classList.remove("active");
+        });
       });
     }
 
-    function hideTooltip() {
-      archTooltip.classList.remove('visible');
-      archLayers.forEach(function(l) {
-        l.style.opacity = '1';
-        const rect = l.querySelector('rect');
-        if (rect && l.getAttribute('data-layer') !== 'APPLICATION') {
-          rect.setAttribute('stroke', 'var(--seam)');
-        } else if (rect && l.getAttribute('data-layer') === 'APPLICATION') {
-          rect.setAttribute('stroke', 'var(--signal)');
-        }
-        const texts = l.querySelectorAll('text');
-        const isApp = l.getAttribute('data-layer') === 'APPLICATION';
-        const isObs = l.getAttribute('data-layer') === 'OBSERVABILITY';
-        if (texts[0]) texts[0].setAttribute('fill', isApp ? 'var(--bone)' : 'var(--ash)');
-      });
-    }
-
-    layer.addEventListener('mouseenter', showTooltip);
-    layer.addEventListener('mouseleave', hideTooltip);
-    layer.addEventListener('focus', showTooltip);
-    layer.addEventListener('blur', hideTooltip);
-
-    layer.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        showTooltip();
-      }
-    });
-  });
-
-  // ═══════════════════════════════════════
-  // ARCHITECTURE DATA PULSES
-  // ═══════════════════════════════════════
-  const archPulseGroup = document.getElementById('arch-pulses');
-
-  function spawnArchPulse() {
-    if (!archPulseGroup || prefersReduced) return;
-
-    const paths = [
-      // Bottom to top paths
-      [{ x: 300, y: 560 }, { x: 300, y: 520 }, { x: 300, y: 460 }, { x: 300, y: 410 }, { x: 300, y: 350 }, { x: 250, y: 300 }, { x: 250, y: 220 }, { x: 250, y: 180 }, { x: 250, y: 120 }, { x: 300, y: 80 }, { x: 300, y: 20 }],
-      [{ x: 600, y: 560 }, { x: 600, y: 520 }, { x: 600, y: 460 }, { x: 600, y: 410 }, { x: 600, y: 350 }, { x: 650, y: 300 }, { x: 650, y: 220 }, { x: 650, y: 180 }, { x: 650, y: 120 }, { x: 600, y: 80 }, { x: 600, y: 20 }],
-      [{ x: 450, y: 560 }, { x: 450, y: 520 }, { x: 450, y: 460 }, { x: 450, y: 410 }, { x: 450, y: 350 }, { x: 450, y: 300 }, { x: 450, y: 220 }, { x: 450, y: 180 }, { x: 450, y: 120 }, { x: 450, y: 80 }, { x: 450, y: 20 }]
-    ];
-
-    const path = paths[Math.floor(Math.random() * paths.length)];
-
-    // Create SVG circle
-    const ns = 'http://www.w3.org/2000/svg';
-    const circle = document.createElementNS(ns, 'circle');
-    circle.setAttribute('r', '3');
-    circle.setAttribute('fill', 'var(--signal)');
-    circle.setAttribute('opacity', '0');
-    archPulseGroup.appendChild(circle);
-
-    const duration = 2;
-    const startTime = performance.now();
-
-    function animatePulse(now) {
-      const elapsed = (now - startTime) / 1000;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Find current position along path
-      const totalSegments = path.length - 1;
-      const currentSegment = Math.floor(progress * totalSegments);
-      const segmentProgress = (progress * totalSegments) - currentSegment;
-
-      if (currentSegment >= totalSegments) {
-        circle.remove();
-        return;
-      }
-
-      const p1 = path[currentSegment];
-      const p2 = path[currentSegment + 1];
-      const x = p1.x + (p2.x - p1.x) * segmentProgress;
-      const y = p1.y + (p2.y - p1.y) * segmentProgress;
-
-      circle.setAttribute('cx', x);
-      circle.setAttribute('cy', y);
-      circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.9);
-
-      requestAnimationFrame(animatePulse);
-    }
-
-    requestAnimationFrame(animatePulse);
-  }
-
-  if (!prefersReduced) {
-    // Spawn arch pulses periodically
-    setInterval(function() {
-      if (!document.hidden) spawnArchPulse();
-    }, 4000);
-
-    // Initial pulses with delay
-    setTimeout(spawnArchPulse, 1000);
-    setTimeout(spawnArchPulse, 2500);
-  }
-
-  // ═══════════════════════════════════════
-  // PROJECT CHAPTER SCROLL REVEALS
-  // ═══════════════════════════════════════
-  document.querySelectorAll('.project-chapter').forEach(function(chapter) {
-    const left = chapter.querySelector('.chapter-left');
-    const right = chapter.querySelector('.chapter-right');
-
-    if (window.ScrollTrigger && !prefersReduced) {
-      gsap.fromTo(left, {
-        y: 40, opacity: 0
-      }, {
-        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: chapter, start: 'top 75%', once: true }
-      });
-      gsap.fromTo(right, {
-        y: 40, opacity: 0
-      }, {
-        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.1,
-        scrollTrigger: { trigger: chapter, start: 'top 75%', once: true }
-      });
-    }
-  });
-
-  // ═══════════════════════════════════════
-  // PROJECT SEPARATOR PULSES
-  // ═══════════════════════════════════════
-  document.querySelectorAll('.project-separator').forEach(function(sep) {
-    const dot = sep.querySelector('.pulse-dot');
-
-    if (window.ScrollTrigger && !prefersReduced && dot) {
-      ScrollTrigger.create({
-        trigger: sep,
-        start: 'top 80%',
-        once: true,
-        onEnter: function() {
-          gsap.fromTo(dot, {
-            left: '0%'
-          }, {
-            left: '100%',
-            duration: 1.2,
-            ease: 'none',
-            onComplete: function() {
-              dot.style.display = 'none';
-            }
-          });
-        }
-      });
-    }
-  });
-
-  // ═══════════════════════════════════════
-  // LAB SECTION SCROLL REVEAL
-  // ═══════════════════════════════════════
-  if (window.ScrollTrigger && !prefersReduced) {
-    gsap.fromTo('#section-lab .lab-statement', {
-      y: 32, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
-      scrollTrigger: { trigger: '#section-lab', start: 'top 75%', once: true }
-    });
-
-    gsap.fromTo('#homelab-diagram', {
-      y: 40, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0.15,
-      scrollTrigger: { trigger: '#section-lab', start: 'top 65%', once: true }
-    });
-
-    gsap.fromTo('.lab-status-panel', {
-      x: 40, opacity: 0
-    }, {
-      x: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.3,
-      scrollTrigger: { trigger: '#section-lab', start: 'top 65%', once: true }
-    });
-
-    gsap.fromTo('.lab-description', {
-      y: 24, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.4,
-      scrollTrigger: { trigger: '.lab-description', start: 'top 85%', once: true }
-    });
-  }
-
-  // ═══════════════════════════════════════
-  // LAB STATUS DOT PULSING
-  // ═══════════════════════════════════════
-  if (!prefersReduced) {
-    document.querySelectorAll('.status-dot').forEach(function(dot, i) {
-      gsap.to(dot, {
-        opacity: 0.4,
-        duration: 1.5 + i * 0.2,
+    // GSAP 3D Hero Glyph Animation
+    const heroGlyph = document.getElementById("hero-glyph");
+    if (heroGlyph && typeof gsap !== "undefined") {
+      const elements = heroGlyph.querySelectorAll("i, b");
+      gsap.to(elements, {
+        rotateZ: (i) => (i % 2 === 0 ? 360 : -360),
+        rotateX: (i) => (i + 1) * 12,
+        rotateY: (i) => (i + 1) * 18,
+        duration: 16,
         repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: i * 0.15
+        ease: "none",
+        stagger: 0.1
       });
-    });
 
-    // Lab connector pulses
-    const labPulseGroup = document.getElementById('lab-pulses');
-    const labConnectors = document.querySelectorAll('.lab-connector');
-    const labPaths = [
-      [{ x: 100, y: 86 }, { x: 100, y: 130 }],
-      [{ x: 300, y: 86 }, { x: 300, y: 130 }],
-      [{ x: 500, y: 86 }, { x: 500, y: 130 }],
-      [{ x: 100, y: 228 }, { x: 100, y: 280 }],
-      [{ x: 300, y: 228 }, { x: 300, y: 280 }],
-      [{ x: 500, y: 228 }, { x: 500, y: 280 }]
-    ];
-
-    function spawnLabPulse() {
-      if (!labPulseGroup || prefersReduced) return;
-      const path = labPaths[Math.floor(Math.random() * labPaths.length)];
-      const ns = 'http://www.w3.org/2000/svg';
-      const circle = document.createElementNS(ns, 'circle');
-      circle.setAttribute('r', '2.5');
-      circle.setAttribute('fill', 'var(--signal)');
-      circle.setAttribute('opacity', '0');
-      labPulseGroup.appendChild(circle);
-
-      const duration = 1.2;
-      const startTime = performance.now();
-
-      function animateLabPulse(now) {
-        const elapsed = (now - startTime) / 1000;
-        const progress = Math.min(elapsed / duration, 1);
-        const p1 = path[0];
-        const p2 = path[1];
-        const x = p1.x + (p2.x - p1.x) * progress;
-        const y = p1.y + (p2.y - p1.y) * progress;
-        circle.setAttribute('cx', x);
-        circle.setAttribute('cy', y);
-        circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.8);
-        if (progress >= 1) {
-          circle.remove();
-          return;
-        }
-        requestAnimationFrame(animateLabPulse);
-      }
-      requestAnimationFrame(animateLabPulse);
-    }
-
-    setInterval(function() {
-      if (!document.hidden) spawnLabPulse();
-    }, 5000 + Math.random() * 3000);
-  }
-
-  // ═══════════════════════════════════════
-  // PRINCIPLES SCROLL REVEAL
-  // ═══════════════════════════════════════
-  document.querySelectorAll('.principle').forEach(function(p, i) {
-    if (window.ScrollTrigger && !prefersReduced) {
-      gsap.fromTo(p, {
-        y: 24, opacity: 0
-      }, {
-        y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: i * 0.12,
-        scrollTrigger: { trigger: p, start: 'top 80%', once: true }
+      window.addEventListener("mousemove", (e) => {
+        const { clientX, clientY } = e;
+        const { innerWidth, innerHeight } = window;
+        const x = (clientX / innerWidth - 0.5) * 24;
+        const y = (clientY / innerHeight - 0.5) * 24;
+        gsap.to(heroGlyph, {
+          rotateX: -y,
+          rotateY: x,
+          duration: 0.8,
+          ease: "power2.out"
+        });
       });
     }
-  });
 
-  // ═══════════════════════════════════════
-  // CONNECT SECTION SCROLL REVEAL
-  // ═══════════════════════════════════════
-  if (window.ScrollTrigger && !prefersReduced) {
-    gsap.fromTo('#section-connect .connect-statement', {
-      y: 40, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
-      scrollTrigger: { trigger: '#section-connect', start: 'top 75%', once: true }
-    });
-
-    gsap.fromTo('#section-connect .connect-support', {
-      y: 24, opacity: 0
-    }, {
-      y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.15,
-      scrollTrigger: { trigger: '#section-connect', start: 'top 75%', once: true }
-    });
-
-    gsap.fromTo('.connect-link-row', {
-      x: -20, opacity: 0
-    }, {
-      x: 0, opacity: 1, duration: 0.5, ease: 'power3.out', stagger: 0.08, delay: 0.3,
-      scrollTrigger: { trigger: '.connect-links', start: 'top 85%', once: true }
-    });
-
-    gsap.fromTo('.connect-footer', {
-      opacity: 0
-    }, {
-      opacity: 1, duration: 0.5, delay: 0.6,
-      scrollTrigger: { trigger: '.connect-links', start: 'top 85%', once: true }
-    });
-
-    // Grid converge effect
-    ScrollTrigger.create({
-      trigger: '#section-connect',
-      start: 'top 70%',
-      end: 'bottom 100%',
-      onEnter: function() {
-        gsap.to('#signal-grid', { opacity: 0.12, duration: 1.5, ease: 'power2.inOut' });
-      },
-      onLeave: function() {
-        gsap.to('#signal-grid', { opacity: isMobile ? 0.04 : 0.06, duration: 1, ease: 'power2.inOut' });
-      },
-      onEnterBack: function() {
-        gsap.to('#signal-grid', { opacity: 0.12, duration: 1.5, ease: 'power2.inOut' });
-      },
-      onLeaveBack: function() {
-        gsap.to('#signal-grid', { opacity: isMobile ? 0.04 : 0.06, duration: 1, ease: 'power2.inOut' });
-      }
-    });
-  }
-
-  // ═══════════════════════════════════════
-  // SIGNAL PULSE ON RANDOM LINES
-  // ═══════════════════════════════════════
-  // Create signal lines that occasionally pulse across the page
-  if (!prefersReduced) {
-    function signalPulse() {
-      // Find random connector lines in arch diagram
-      const connectors = document.querySelectorAll('.arch-connector');
-      if (connectors.length > 0) {
-        const connector = connectors[Math.floor(Math.random() * connectors.length)];
-        const x1 = parseFloat(connector.getAttribute('x1'));
-        const y1 = parseFloat(connector.getAttribute('y1'));
-        const x2 = parseFloat(connector.getAttribute('x2'));
-        const y2 = parseFloat(connector.getAttribute('y2'));
-
-        const archPulses = document.getElementById('arch-pulses');
-        if (archPulses) {
-          const ns = 'http://www.w3.org/2000/svg';
-          const circle = document.createElementNS(ns, 'circle');
-          circle.setAttribute('r', '2');
-          circle.setAttribute('fill', 'var(--signal)');
-          circle.setAttribute('opacity', '0');
-          archPulses.appendChild(circle);
-
-          const duration = 0.8;
-          const startTime = performance.now();
-
-          function animPulse(now) {
-            const elapsed = (now - startTime) / 1000;
-            const progress = Math.min(elapsed / duration, 1);
-            const x = x1 + (x2 - x1) * progress;
-            const y = y1 + (y2 - y1) * progress;
-            circle.setAttribute('cx', x);
-            circle.setAttribute('cy', y);
-            circle.setAttribute('opacity', Math.sin(progress * Math.PI) * 0.7);
-            if (progress >= 1) {
-              circle.remove();
-              return;
-            }
-            requestAnimationFrame(animPulse);
-          }
-          requestAnimationFrame(animPulse);
+    // Scroll Reveal Observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.getAttribute("data-delay") || 0;
+          setTimeout(() => {
+            entry.target.classList.add("active");
+          }, Number(delay));
+          observer.unobserve(entry.target);
         }
-      }
-    }
+      });
+    }, { threshold: 0.1 });
 
-    setInterval(function() {
-      if (!document.hidden) signalPulse();
-    }, 6000 + Math.random() * 2000);
-  }
-
-  // ═══════════════════════════════════════
-  // REFRESH SCROLLTRIGGER AFTER LOAD
-  // ═══════════════════════════════════════
-  window.addEventListener('load', function() {
-    if (window.ScrollTrigger) {
-      ScrollTrigger.refresh();
-    }
-  });
-
-  // Also refresh on font load
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function() {
-      if (window.ScrollTrigger) {
-        ScrollTrigger.refresh();
-      }
-    });
-  }
-
-})();
-</script>
-
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
